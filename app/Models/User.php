@@ -4,12 +4,18 @@ namespace App\Models;
 
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, BelongsToTenant;
+    use HasFactory, Notifiable, SoftDeletes, LogsActivity;
+
+    // NO usar BelongsToTenant para que los super admins no sean filtrados
+    // use BelongsToTenant;
 
     protected $fillable = [
         'tenant_id',
@@ -18,6 +24,7 @@ class User extends Authenticatable
         'password',
         'role',
         'is_active',
+        'is_super_admin',
     ];
 
     protected $hidden = [
@@ -25,25 +32,28 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-        'is_active' => 'boolean',
-    ];
-
-    // Helpers
-    public function isAdmin()
+    protected function casts(): array
     {
-        return $this->role === 'admin';
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_active' => 'boolean',
+            'is_super_admin' => 'boolean',
+        ];
     }
 
-    public function isSuperAdmin()
+    // Relación con Tenant
+    public function tenant()
     {
-        return $this->role === 'super_admin';
+        return $this->belongsTo(Tenant::class);
     }
 
-    public function isOperator()
+    // Activity Log
+    public function getActivitylogOptions(): LogOptions
     {
-        return $this->role === 'operator';
+        return LogOptions::defaults()
+            ->logOnly(['name', 'email', 'role', 'is_active', 'is_super_admin'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 }

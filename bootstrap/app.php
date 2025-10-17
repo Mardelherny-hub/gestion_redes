@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Middleware\IdentifyTenant;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use App\Http\Middleware\IdentifyTenant;
+use App\Http\Middleware\SuperAdmin;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -12,9 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Agregar middleware de tenant a web
+        // Agregar el middleware automáticamente a todas las rutas web
         $middleware->web(append: [
             IdentifyTenant::class,
+        ]);
+
+        // Registrar alias para middlewares personalizados
+        $middleware->alias([
+            'super.admin' => SuperAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

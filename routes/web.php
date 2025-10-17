@@ -2,14 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'welcome');
-
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
-
-Route::view('profile', 'profile')
-    ->middleware(['auth'])
-    ->name('profile');
-
+// Cargar archivos de rutas
 require __DIR__.'/auth.php';
+require __DIR__.'/super-admin.php';
+require __DIR__.'/client.php';

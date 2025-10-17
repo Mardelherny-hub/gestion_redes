@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // "Casino Royal"
-            $table->string('slug')->unique(); // casino-royal
+            $table->string('name'); // "Cliente Royal"
+            $table->string('slug')->unique(); // cliente-royal
             $table->string('domain')->unique()->nullable();
             $table->string('logo_url')->nullable();
             $table->string('primary_color')->default('#3B82F6');

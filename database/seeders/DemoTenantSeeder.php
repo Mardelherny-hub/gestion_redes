@@ -18,9 +18,9 @@ class DemoTenantSeeder extends Seeder
 
         // Crear tenant de demostración
         $tenant = Tenant::create([
-            'name' => 'Casino Royal Demo',
+            'name' => 'Cliente Royal Demo',
             'slug' => 'demo',
-            'domain' => 'demo.casinoredes.test',
+            'domain' => 'demo.clienteredes.test',
             'primary_color' => '#DC2626',
             'secondary_color' => '#F59E0B',
             'whatsapp_number' => '+5492233123456',
@@ -30,7 +30,7 @@ class DemoTenantSeeder extends Seeder
                     'account_type' => 'Cuenta Corriente',
                     'account_number' => '1234567890',
                     'cbu' => '0110599520000012345678',
-                    'alias' => 'CASINO.ROYAL.DEMO',
+                    'alias' => 'Cliente.ROYAL.DEMO',
                 ],
             ],
             'is_active' => true,
@@ -163,7 +163,7 @@ class DemoTenantSeeder extends Seeder
         $this->command->info('🌐 URL: http://localhost:8000');
         $this->command->info('');
         $this->command->info('📊 Datos creados:');
-        $this->command->info('   • 1 Tenant (Casino Royal Demo)');
+        $this->command->info('   • 1 Tenant (Cliente Royal Demo)');
         $this->command->info('   • 2 Usuarios (Admin + Operador)');
         $this->command->info('   • 6 Jugadores con saldos');
         $this->command->info('   • 8 Transacciones de ejemplo');

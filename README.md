@@ -1,6 +1,6 @@
-# 🎰 Gestión Redes - Sistema Multi-Tenant para Casinos
+# 🎰 Gestión Redes - Sistema Multi-Tenant para Clientes
 
-Sistema SaaS multi-tenant para gestión automatizada de casinos online con integración WhatsApp Business API.
+Sistema SaaS multi-tenant para gestión automatizada de clientes online con integración WhatsApp Business API.
 
 ## 🚀 Stack Tecnológico
 
@@ -24,8 +24,8 @@ Sistema SaaS multi-tenant para gestión automatizada de casinos online con integ
 
 ### 1. Clonar repositorio
 ```bash
-git clone https://github.com/TU_USUARIO/gestion-redes-casinos.git
-cd gestion-redes-casinos
+git clone https://github.com/TU_USUARIO/gestion-redes.git
+cd gestion-redes
 ```
 
 ### 2. Instalar dependencias
