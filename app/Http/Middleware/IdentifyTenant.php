@@ -14,53 +14,91 @@ class IdentifyTenant
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $subdomain = $this->getSubdomain($request);
-        
-        if (!$subdomain) {
-            abort(404, 'No se pudo identificar el cliente');
-        }
-
-        // Buscar el tenant por domain exacto O por subdomain
-        $tenant = Tenant::where('domain', $subdomain)
-            ->orWhere('domain', 'like', $subdomain . '.%')
-            ->where('is_active', true)
-            ->first();
-
-        if (!$tenant) {
-            abort(404, 'Cliente no encontrado o inactivo');
-        }
-
-        // Guardar el tenant en el request para usarlo en toda la aplicación
-        $request->attributes->set('current_tenant', $tenant);
-        
-        // También lo guardamos en config para fácil acceso
-        config(['app.current_tenant' => $tenant]);
-
-        // Compartir con todas las vistas
-        view()->share('currentTenant', $tenant);
-
-        return $next($request);
-    }
-
-    /**
-     * Extraer el subdomain del request
-     */
-    private function getSubdomain(Request $request): ?string
-    {
         $host = $request->getHost();
         
-        // Si estás en localhost o una IP, retornar 'demo' por defecto para testing
-        if ($host === 'localhost' || filter_var($host, FILTER_VALIDATE_IP)) {
-            return 'demo'; // Cambiar según tu tenant de prueba
-        }
-
-        // Extraer subdomain (ej: demo.casinoredes.test -> demo)
-        $parts = explode('.', $host);
+        // PASO 1: Buscar por dominio personalizado completo
+        $tenant = Tenant::where('custom_domain', $host)
+            ->where('is_active', true)
+            ->first();
         
-        if (count($parts) > 2) {
-            return $parts[0];
+        if ($tenant) {
+            $this->setTenant($request, $tenant);
+            return $next($request);
         }
-
+        
+        // PASO 2: Buscar por subdominio
+        $subdomain = $this->extractSubdomain($host);
+        
+        if ($subdomain) {
+            $tenant = Tenant::where('domain', $subdomain)
+                ->where('is_active', true)
+                ->first();
+            
+            if ($tenant) {
+                $this->setTenant($request, $tenant);
+                return $next($request);
+            }
+        }
+        
+        // PASO 3: Entorno local (localhost/testing)
+        if ($this->isLocalEnvironment($host)) {
+            $tenant = Tenant::where('domain', 'demo')
+                ->orWhere('slug', 'demo')
+                ->first();
+            
+            if ($tenant) {
+                $this->setTenant($request, $tenant);
+                return $next($request);
+            }
+        }
+        
+        // Si no se encontró tenant, mostrar error
+        abort(404, 'Cliente no encontrado. Verifica el dominio.');
+    }
+    
+    /**
+     * Extraer subdomain del host
+     */
+    private function extractSubdomain(string $host): ?string
+    {
+        $appDomain = config('app.domain', 'plataforma.com');
+        
+        // Si el host termina con el dominio base de la app
+        if (str_ends_with($host, '.' . $appDomain)) {
+            // Extraer la parte del subdomain
+            $subdomain = str_replace('.' . $appDomain, '', $host);
+            return $subdomain;
+        }
+        
         return null;
     }
+    
+    /**
+     * Verificar si estamos en entorno local
+     */
+    private function isLocalEnvironment(string $host): bool
+    {
+        return in_array($host, [
+            'localhost',
+            '127.0.0.1',
+            '::1'
+        ]) || str_ends_with($host, '.test') 
+           || str_ends_with($host, '.local');
+    }
+    
+    /**
+     * Establecer el tenant en el request y config
+     */
+    private function setTenant(Request $request, Tenant $tenant): void
+    {
+        // Guardar en request attributes
+        $request->attributes->set('current_tenant', $tenant);
+        
+        // Guardar en config para acceso global
+        config(['app.current_tenant' => $tenant]);
+        
+        // Compartir con todas las vistas
+        view()->share('currentTenant', $tenant);
+    }
+    
 }

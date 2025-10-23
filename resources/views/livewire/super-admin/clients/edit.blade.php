@@ -58,19 +58,58 @@
                                 @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
-                            <!-- Dominio -->
+                            <!-- Subdominio -->
                             <div>
                                 <label for="domain" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Dominio <span class="text-red-500">*</span>
+                                    Subdominio <span class="text-red-500">*</span> 
+                                    <span class="text-gray-400 text-xs">(obligatorio)</span>
+                                </label>
+                                <div class="flex rounded-md shadow-sm">
+                                    <input 
+                                        type="text" 
+                                        wire:model="domain" 
+                                        id="domain"
+                                        class="flex-1 min-w-0 block w-full rounded-none rounded-l-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                        placeholder="cliente1"
+                                    >
+                                    <span class="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 dark:bg-gray-600 dark:border-gray-600 dark:text-gray-300 text-sm">
+                                        .{{ config('app.domain') }}
+                                    </span>
+                                </div>
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    El cliente accede en: <strong>{{ $domain ?: 'subdominio' }}.{{ config('app.domain') }}</strong>
+                                </p>
+                                @error('domain') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+
+                            <!-- Dominio Personalizado (NUEVO) -->
+                            <div class="border-t pt-6 dark:border-gray-700">
+                                <label for="custom_domain" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Dominio Personalizado 
+                                    <span class="text-gray-400 text-xs">(opcional)</span>
                                 </label>
                                 <input 
                                     type="text" 
-                                    wire:model="domain" 
-                                    id="domain"
+                                    wire:model="custom_domain" 
+                                    id="custom_domain"
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                    placeholder="www.ejemplo.com"
                                 >
-                                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Será usado como: {{ $domain }}.tuapp.com</p>
-                                @error('domain') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                @if($tenant->custom_domain)
+                                    <p class="text-xs text-green-600 dark:text-green-400 mt-1">
+                                        ✓ Actualmente usando: <strong>{{ $tenant->custom_domain }}</strong>
+                                    </p>
+                                @endif
+                                <div class="mt-2 text-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-3">
+                                    <p class="font-medium text-blue-800 dark:text-blue-300">ℹ️ Dominio Personalizado:</p>
+                                    <ul class="list-disc list-inside mt-2 space-y-1 text-blue-700 dark:text-blue-400">
+                                        <li>Si cambias el dominio, se generarán nuevas instrucciones DNS</li>
+                                        <li>El subdominio siempre estará disponible como respaldo</li>
+                                    </ul>
+                                </div>
+                                @error('custom_domain') 
+                                    <span class="text-red-500 text-sm mt-1">{{ $message }}</span> 
+                                @enderror
                             </div>
 
                             <!-- Base de Datos -->
@@ -190,6 +229,60 @@
                         </div>
                     </div>
 
+                    <!-- SECCIÓN: ADMINISTRADOR DEL CLIENTE -->
+                    <div class="border-t pt-6 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                            👤 Administrador del Cliente
+                        </h3>
+                        
+                        @php
+                            $admin = $tenant->users()->where('role', 'admin')->first();
+                        @endphp
+                        
+                        @if($admin)
+                            <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Nombre:</p>
+                                        <p class="font-medium text-gray-900 dark:text-white">{{ $admin->name }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Email:</p>
+                                        <p class="font-medium text-gray-900 dark:text-white">{{ $admin->email }}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Último acceso:</p>
+                                        <p class="font-medium text-gray-900 dark:text-white">
+                                            {{ $admin->last_login_at ? $admin->last_login_at->diffForHumans() : 'Nunca' }}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm text-gray-600 dark:text-gray-400">Estado:</p>
+                                        <p class="font-medium">
+                                            @if($admin->is_active)
+                                                <span class="text-green-600 dark:text-green-400">✓ Activo</span>
+                                            @else
+                                                <span class="text-red-600 dark:text-red-400">✗ Inactivo</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        💡 Para cambiar estos datos, el administrador debe hacerlo desde su perfil en el panel de cliente.
+                                    </p>
+                                </div>
+                            </div>
+                        @else
+                            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded p-4">
+                                <p class="text-yellow-800 dark:text-yellow-300">
+                                    ⚠️ Este cliente no tiene un administrador asignado.
+                                </p>
+                            </div>
+                        @endif
+                    </div>
+
                     <!-- Estado -->
                     <div>
                         <label class="flex items-center">
@@ -216,4 +309,22 @@
             </div>
         </div>
     </div>
+    <!-- MODAL DE INSTRUCCIONES DNS -->
+        @if($showDnsInstructions)
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-2xl w-full mx-4 max-h-screen overflow-y-auto">
+                <h3 class="text-lg font-bold mb-4 text-green-600 dark:text-green-400">
+                    ✅ Dominio Actualizado
+                </h3>
+                <p class="mb-4 text-gray-700 dark:text-gray-300">El cliente debe configurar estos registros DNS:</p>
+                <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded text-sm overflow-x-auto whitespace-pre-wrap text-gray-800 dark:text-gray-200">{{ $dnsInstructions }}</pre>
+                <div class="mt-6 flex justify-end">
+                    <button wire:click="$set('showDnsInstructions', false)" 
+                            class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600">
+                        Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+        @endif
 </div>

@@ -14,6 +14,7 @@ class Tenant extends Model
         'name',
         'slug',
         'domain',
+        'custom_domain',
         'logo_url',
         'primary_color',
         'secondary_color',
@@ -60,5 +61,17 @@ class Tenant extends Model
     public function getLogoAttribute()
     {
         return $this->logo_url ?? asset('images/default-logo.png');
+    }
+
+    /**
+     * Obtener la URL activa del tenant
+     */
+    public function getActiveUrl(): string
+    {
+        if ($this->custom_domain) {
+            return 'https://' . $this->custom_domain;
+        }
+        
+        return 'https://' . $this->domain . '.' . config('app.domain');
     }
 }

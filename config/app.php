@@ -15,6 +15,8 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
 
+    'domain' => env('APP_DOMAIN', 'plataforma.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -65,7 +67,13 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'cipher' => 'AES-256-CBC',
+
+    'timezone' => env('APP_TIMEZONE', 'UTC'),
+
+    'domain' => env('APP_DOMAIN', 'plataforma.com'), 
+
+    'locale' => env('APP_LOCALE', 'en'),
 
     /*
     |--------------------------------------------------------------------------
