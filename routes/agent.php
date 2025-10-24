@@ -22,6 +22,6 @@ Route::middleware(['auth', 'tenant.identify'])->group(function () {
     // Gestión de Transacciones
     Route::view('/dashboard/transactions/pending', 'agent.transactions.pending')->name('dashboard.transactions.pending');
     Route::view('/dashboard/transactions/history', 'agent.transactions.history')->name('dashboard.transactions.history');
-
+    Route::view('/dashboard/transactions/monitor', 'agent.transactions.monitor')->name('dashboard.transactions.monitor');
 
 }); 

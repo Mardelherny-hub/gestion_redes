@@ -54,14 +54,7 @@
                                 {{ request()->routeIs('dashboard.transactions.*') ? 'border-indigo-400 text-gray-900 dark:text-gray-100 focus:border-indigo-700' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600' }}"
                                 style="{{ request()->routeIs('dashboard.transactions.*') ? 'border-color: ' . $currentTenant->primary_color : '' }}">
                                     Transacciones
-                                    @php
-                                        $pendingCount = \App\Models\Transaction::pending()->count();
-                                    @endphp
-                                    @if($pendingCount > 0)
-                                        <span class="ml-2 px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full animate-pulse">
-                                            {{ $pendingCount }}
-                                        </span>
-                                    @endif
+                                    <livewire:agent.transactions.pending-badge />
                                 </a>
                             </div>
                         </div>

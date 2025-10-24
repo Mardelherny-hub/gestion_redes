@@ -1,4 +1,4 @@
-<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg" wire:poll.30s>
+<div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg" wire:poll.10s>
     {{-- Header --}}
     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <div class="flex items-center space-x-3">
@@ -14,10 +14,21 @@
                 </span>
             @endif
         </div>
-        <a href="{{ route('dashboard.transactions.pending') }}" 
-           class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400">
-            Ver todas →
-        </a>
+        <div class="flex items-center space-x-3">
+            @if($pendingCount > 0)
+                <a href="{{ route('dashboard.transactions.monitor') }}" 
+                   class="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                    <span>Modo Monitor</span>
+                </a>
+            @endif
+            <a href="{{ route('dashboard.transactions.pending') }}" 
+               class="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400">
+                Ver todas →
+            </a>
+        </div>
     </div>
 
     {{-- Contenido --}}
