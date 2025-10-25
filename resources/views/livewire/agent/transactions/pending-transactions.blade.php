@@ -99,21 +99,21 @@
                             {{-- Botones de Acción --}}
                             <div class="flex flex-col space-y-2">
                                 <button 
-                                    wire:click="$dispatch('openTransactionDetail', { transactionId: {{ $transaction->id }} })"
-                                    class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                                    wire:click="$dispatch('openApprovalModal', { transactionId: {{ $transaction->id }} })"
+                                    class="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition flex items-center justify-center gap-1"
                                 >
-                                    Ver
-                                </button>
-                                <button 
-                                    wire:click="$dispatch('openTransactionApproval', { transactionId: {{ $transaction->id }} })"
-                                    class="px-4 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition"
-                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
                                     Aprobar
                                 </button>
                                 <button 
-                                    wire:click="$dispatch('openTransactionRejection', { transactionId: {{ $transaction->id }} })"
-                                    class="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition"
+                                    wire:click="$dispatch('openRejectionModal', { transactionId: {{ $transaction->id }} })"
+                                    class="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700 transition flex items-center justify-center gap-1"
                                 >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
                                     Rechazar
                                 </button>
                             </div>
@@ -133,4 +133,9 @@
             @endif
         @endif
     </div>
+
+     <!-- Modales -->
+    @livewire('agent.transactions.approve-transaction')
+    @livewire('agent.transactions.reject-transaction')
+
 </div>

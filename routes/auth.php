@@ -3,7 +3,7 @@
 use App\Livewire\Auth\Login;
 use Illuminate\Support\Facades\Route;
 
-// Login - aplica middleware tenant.identify
+// Login COMPARTIDO para agents/admins (nombre: login)
 Route::middleware(['guest', 'tenant.identify'])->group(function () {
     Route::get('login', Login::class)->name('login');
 });

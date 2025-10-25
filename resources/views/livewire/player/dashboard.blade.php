@@ -188,4 +188,12 @@
         @endif
     </div>
 
+
+    <!-- Modal de Carga -->
+    @livewire('player.deposit-request')
+
+
+    <!-- Modal de Retiro -->
+    @livewire('player.withdrawal-request')
+
 </div>

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['tenant.identify'])->group(function () {
     
     Route::middleware('guest:player')->group(function () {
-        Route::get('/login', Login::class)->name('player.login');
+        Route::get('/player/login', Login::class)->name('player.login');
         Route::get('/register', Register::class)->name('player.register');
     });
 });
@@ -28,7 +28,7 @@ Route::prefix('player')
         Route::view('/profile', 'player.profile')->name('profile');
 
         // Transacciones
-        Route::view('/transactions', 'player.transactions')->name('transactions');
+        Route::get('/transactions', \App\Livewire\Player\Transactions::class)->name('transactions');
 
         // Bonos
         Route::view('/bonuses', 'player.bonuses')->name('bonuses');

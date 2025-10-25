@@ -14,15 +14,24 @@ class Dashboard extends Component
     public $recentTransactions;
     public $pendingTransactions;
     
+    protected $listeners = ['refreshDashboard' => 'loadData'];
+
     public function mount()
     {
         $this->player = auth()->guard('player')->user();
+        $this->loadData();
+    }
+
+    public function loadData()
+    {
+        // Refrescar el player desde la BD
+        $this->player->refresh();
         
         // Cargar datos
         $this->balance = $this->player->balance;
         $this->referralCode = $this->player->referral_code;
         
-        // Bonos activos (podemos implementar esto después)
+        // Bonos activos
         $this->activeBonuses = $this->player->bonuses()
             ->where('status', 'active')
             ->count();

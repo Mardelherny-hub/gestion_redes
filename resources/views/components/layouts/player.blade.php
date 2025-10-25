@@ -129,5 +129,9 @@
 
         <!-- Livewire Scripts -->
         @livewireScripts
+
+        <!-- Toast Notifications -->
+        <x-toast-notifications />
+
     </body>
 </html>

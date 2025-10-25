@@ -12,6 +12,8 @@ use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Rule;
 use Livewire\Component;
+use Illuminate\Support\Facades\Hash;
+
 
 class Login extends Component
 {
@@ -159,16 +161,16 @@ class Login extends Component
             ]);
         }
 
-        // Intentar autenticación como player
-        if (!Auth::guard('player')->attempt(
-            ['email' => $this->email, 'password' => $this->password, 'tenant_id' => $currentTenant->id],
-            $this->remember
-        )) {
+        // Verificar contraseña manualmente
+        if (!Hash::check($this->password, $player->password)) {
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
                 'email' => __('Las credenciales no coinciden con nuestros registros.'),
             ]);
         }
+
+        // Login manual con el guard player
+        Auth::guard('player')->login($player, $this->remember);
 
         RateLimiter::clear($this->throttleKey());
         session()->regenerate();

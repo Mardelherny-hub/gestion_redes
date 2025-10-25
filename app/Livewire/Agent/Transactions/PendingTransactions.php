@@ -11,7 +11,10 @@ class PendingTransactions extends Component
     public $pendingCount = 0;
     
     // Para actualización automática cada 30 segundos
-    protected $listeners = ['refreshPending' => '$refresh'];
+    protected $listeners = [
+        'refreshPending' => '$refresh',
+        'transactionProcessed' => '$refresh'
+    ];
 
     public function mount()
     {

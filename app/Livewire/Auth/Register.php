@@ -95,7 +95,7 @@ class Register extends Component
             'password' => [
                 'required',
                 'min:8',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/',
+                //'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/',
                 'confirmed'
             ],
             'referral_code' => [
@@ -164,7 +164,7 @@ class Register extends Component
     
     public function render()
     {
-        return view('livewire.player.auth.register')
+        return view('livewire.auth.register')
             ->layout('layouts.player-auth');
     }
 }
