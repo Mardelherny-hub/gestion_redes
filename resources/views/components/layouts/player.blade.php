@@ -45,27 +45,27 @@
                             @livewire('player.balance-display')
 
                             {{-- chat --}}
-@livewire('player.player-chat', key('chat-widget'))
+                            @livewire('player.player-chat', key('chat-widget'))
 
-<button onclick="Livewire.dispatch('toggle-chat')"
-   class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-700 transition">
-    <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-    </svg>
-    <span class="hidden sm:inline text-gray-300">Mensajes</span>
-    
-    @php
-        $unreadCount = \App\Models\PlayerMessage::where('player_id', auth()->guard('player')->id())
-            ->whereNull('read_by_player_at')
-            ->count();
-    @endphp
-    
-    @if($unreadCount > 0)
-    <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
-        {{ $unreadCount > 9 ? '9+' : $unreadCount }}
-    </span>
-    @endif
-</button>
+                            <button onclick="Livewire.dispatch('toggle-chat')"
+                            class="relative flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-700 transition">
+                                <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                                </svg>
+                                <span class="hidden sm:inline text-gray-300">Mensajes</span>
+                                
+                                @php
+                                    $unreadCount = \App\Models\PlayerMessage::where('player_id', auth()->guard('player')->id())
+                                        ->whereNull('read_by_player_at')
+                                        ->count();
+                                @endphp
+                                
+                                @if($unreadCount > 0)
+                                <span class="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                                    {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                                </span>
+                                @endif
+                            </button>
                             
 
                             <!-- User Dropdown -->
@@ -116,6 +116,15 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                             </svg>
                                             <span>Mis Transacciones</span>
+                                        </a>
+
+                                        <!-- Mis Bonos -->
+                                        <a href="{{ route('player.bonuses') }}" wire:navigate
+                                        class="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-700 transition">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                                            </svg>
+                                            <span>Mis Bonos</span>
                                         </a>
 
                                         <!-- Cerrar Sesión -->

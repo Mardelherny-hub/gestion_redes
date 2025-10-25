@@ -4,14 +4,17 @@ namespace App\Observers;
 
 use App\Models\Player;
 use App\Services\MessageService;
+use App\Services\BonusService;
 
 class PlayerObserver
 {
     protected $messageService;
+    protected $bonusService;
 
-    public function __construct(MessageService $messageService)
+    public function __construct(MessageService $messageService, BonusService $bonusService)
     {
         $this->messageService = $messageService;
+        $this->bonusService = $bonusService;
     }
 
     /**
@@ -21,6 +24,13 @@ class PlayerObserver
     {
         // Mensaje de bienvenida automático
         $this->messageService->notifyWelcome($player);
+        
+        // Bono de bienvenida (configurable por tenant, por ahora fijo en $500)
+        $welcomeBonusAmount = 500; // TODO: hacer configurable por tenant
+        
+        if ($welcomeBonusAmount > 0) {
+            $this->bonusService->grantWelcomeBonus($player, $welcomeBonusAmount);
+        }
     }
 
     /**

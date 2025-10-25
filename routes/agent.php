@@ -26,4 +26,7 @@ Route::middleware(['auth', 'tenant.identify'])->group(function () {
 
     // Route pane de mensajes del agente
     Route::get('/messages', fn() => view('agent.messages'))->name('messages');
+
+    // Gestión de Bonos
+    Route::get('/bonuses', fn() => view('agent.bonuses'))->name('bonuses');
 }); 
