@@ -15,6 +15,7 @@ class Player extends Authenticatable
     protected $fillable = [
         'tenant_id',
         'name',
+        'username',
         'phone',
         'email',
         'password',

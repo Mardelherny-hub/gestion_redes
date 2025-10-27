@@ -25,11 +25,34 @@ class PlayerObserver
         // Mensaje de bienvenida automático
         $this->messageService->notifyWelcome($player);
         
-        // Bono de bienvenida (configurable por tenant, por ahora fijo en $500)
-        $welcomeBonusAmount = 500; // TODO: hacer configurable por tenant
+        $tenant = $player->tenant;
         
-        if ($welcomeBonusAmount > 0) {
-            $this->bonusService->grantWelcomeBonus($player, $welcomeBonusAmount);
+        // 1. Bono de bienvenida (si está habilitado)
+        if ($tenant && $tenant->welcome_bonus_enabled && $tenant->welcome_bonus_amount > 0) {
+            $this->bonusService->grantWelcomeBonus($player, $tenant->welcome_bonus_amount);
+        }
+        
+        // 2. Bono de referido (si usó código de referido)
+        if ($player->referred_by && $tenant && $tenant->referral_bonus_enabled && $tenant->referral_bonus_amount > 0) {
+            
+            // Obtener el referidor
+            $referrer = Player::find($player->referred_by);
+            
+            if ($referrer && $referrer->isActive()) {
+                // Otorgar bono al REFERIDOR (quien compartió el código)
+                $this->bonusService->grantReferralBonus(
+                    $referrer, 
+                    $tenant->referral_bonus_amount,
+                    $player->name
+                );
+                
+                // Otorgar bono al REFERIDO (quien usó el código)
+                $this->bonusService->grantReferralBonus(
+                    $player,
+                    $tenant->referral_bonus_amount,
+                    $referrer->name
+                );
+            }
         }
     }
 

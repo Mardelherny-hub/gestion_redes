@@ -1,0 +1,202 @@
+<div>
+    <!-- Botón para abrir modal -->
+    <button 
+        wire:click="openModal"
+        class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition duration-150 ease-in-out shadow-sm"
+    >
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+        </svg>
+        Configurar Bonos
+    </button>
+
+    <!-- Modal -->
+    @if($showModal)
+    <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            
+            <!-- Background overlay -->
+            <div 
+                class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
+                aria-hidden="true"
+                wire:click="closeModal"
+            ></div>
+
+            <!-- Center modal -->
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <!-- Modal panel -->
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+                
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <svg class="w-8 h-8 text-white mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
+                            </svg>
+                            <h3 class="text-xl font-bold text-white">
+                                Configuración de Bonos
+                            </h3>
+                        </div>
+                        <button 
+                            wire:click="closeModal" 
+                            class="text-white hover:text-gray-200 transition"
+                        >
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Body -->
+                <div class="px-6 py-6 space-y-6">
+                    
+                    <!-- Bono de Bienvenida -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-5 border-2 border-gray-200 dark:border-gray-600">
+                        <div class="mb-4">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center mb-2">
+                                <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+                                </svg>
+                                Bono de Bienvenida
+                            </h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                Se otorga automáticamente cuando un nuevo jugador se registra
+                            </p>
+                        </div>
+
+                        <!-- Checkbox Activar/Desactivar -->
+                        <div class="mb-4">
+                            <label class="flex items-center cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    wire:model="welcome_bonus_enabled"
+                                    class="w-5 h-5 text-green-600 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                                >
+                                <span class="ml-3 text-sm font-medium text-gray-900 dark:text-white">
+                                    Activar Bono de Bienvenida
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Input Monto -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Monto del Bono
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400 text-lg">
+                                    $
+                                </span>
+                                <input 
+                                    type="number" 
+                                    wire:model="welcome_bonus_amount"
+                                    step="0.01"
+                                    min="0"
+                                    class="pl-8 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+                                    placeholder="0.00"
+                                >
+                            </div>
+                            @error('welcome_bonus_amount')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                💡 El checkbox activa o desactiva el bono automático para nuevos registros
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bono de Referido -->
+                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-5 border-2 border-gray-200 dark:border-gray-600">
+                        <div class="mb-4">
+                            <h4 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center mb-2">
+                                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                Bono de Referido
+                            </h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">
+                                Se otorga cuando un jugador usa un código de referido al registrarse
+                            </p>
+                        </div>
+
+                        <!-- Checkbox Activar/Desactivar -->
+                        <div class="mb-4">
+                            <label class="flex items-center cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    wire:model="referral_bonus_enabled"
+                                    class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                >
+                                <span class="ml-3 text-sm font-medium text-gray-900 dark:text-white">
+                                    Activar Bono de Referido
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Input Monto -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Monto del Bono (para ambos: referidor y referido)
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400 text-lg">
+                                    $
+                                </span>
+                                <input 
+                                    type="number" 
+                                    wire:model="referral_bonus_amount"
+                                    step="0.01"
+                                    min="0"
+                                    class="pl-8 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                                    placeholder="0.00"
+                                >
+                            </div>
+                            @error('referral_bonus_amount')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                💡 Ambos jugadores (quien refiere y quien es referido) recibirán este monto
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer -->
+                <div class="bg-gray-50 dark:bg-gray-700 px-6 py-4 flex items-center justify-end space-x-3">
+                    <button 
+                        wire:click="closeModal"
+                        type="button" 
+                        class="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+                    >
+                        Cancelar
+                    </button>
+                    <button 
+                        wire:click="save"
+                        type="button" 
+                        class="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg transition duration-150 ease-in-out shadow-sm"
+                    >
+                        Guardar Cambios
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @endif
+
+    <!-- Toast de éxito -->
+    @if (session()->has('success'))
+    <div 
+        x-data="{ show: true }"
+        x-show="show"
+        x-init="setTimeout(() => show = false, 3000)"
+        class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"
+    >
+        {{ session('success') }}
+    </div>
+    @endif
+</div>

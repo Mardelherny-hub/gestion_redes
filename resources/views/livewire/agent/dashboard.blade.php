@@ -82,6 +82,8 @@
                 </div>
             </div>
 
+            <livewire:agent.bonus-settings />
+
         </div>
 
         {{-- Últimas Transacciones --}}

@@ -14,18 +14,23 @@ class Register extends Component
     
     // Campos del formulario
     public $name = '';
-    public $email = '';
+    public $username = '';
     public $phone = '';
     public $password = '';
     public $password_confirmation = '';
     public $referral_code = '';
     public $terms = false;
+
+    // Validaciones
+    public $usernameValid = null;
     
     // UI
     public $showPassword = false;
     public $showPasswordConfirmation = false;
     public $passwordStrength = '';
     public $referralCodeValid = null;
+
+    public $welcomeBonusAmount = 0;
     
     public function mount()
     {
@@ -36,6 +41,12 @@ class Register extends Component
         if (!$this->tenant) {
             abort(404, 'Tenant no encontrado');
         }
+        
+        // Cargar monto del bono de bienvenida
+        if ($this->tenant->welcome_bonus_enabled && $this->tenant->welcome_bonus_amount > 0) {
+            $this->welcomeBonusAmount = $this->tenant->welcome_bonus_amount;
+        }
+        
     }
     
     public function updatedPassword($value)
@@ -50,6 +61,31 @@ class Register extends Component
         } else {
             $this->referralCodeValid = null;
         }
+    }
+
+    public function updatedUsername($value)
+    {
+        if (strlen($value) >= 4) {
+            $this->validateUsername();
+        } else {
+            $this->usernameValid = null;
+        }
+    }
+
+    private function validateUsername()
+    {
+        // Validar formato
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9]{3,14}$/', $this->username)) {
+            $this->usernameValid = false;
+            return;
+        }
+        
+        // Validar unicidad
+        $exists = Player::where('username', $this->username)
+            ->where('tenant_id', $this->tenant->id)
+            ->exists();
+            
+        $this->usernameValid = !$exists;
     }
     
     private function calculatePasswordStrength($password)
@@ -83,9 +119,11 @@ class Register extends Component
     {
         $this->validate([
             'name' => 'required|min:3|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
-            'email' => [
+            'username' => [  // NUEVO - reemplaza email
                 'required',
-                'email',
+                'min:4',
+                'max:15',
+                'regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
                 Rule::unique('players')->where('tenant_id', $this->tenant->id)
             ],
             'phone' => [
@@ -95,7 +133,6 @@ class Register extends Component
             'password' => [
                 'required',
                 'min:8',
-                //'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/',
                 'confirmed'
             ],
             'referral_code' => [
@@ -114,14 +151,15 @@ class Register extends Component
             'name.required' => 'El nombre es obligatorio',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
             'name.regex' => 'El nombre solo puede contener letras y espacios',
-            'email.required' => 'El email es obligatorio',
-            'email.email' => 'El email no es válido',
-            'email.unique' => 'Este email ya está registrado',
+            'username.required' => 'El nombre de usuario es obligatorio',  // NUEVO
+            'username.min' => 'El usuario debe tener al menos 4 caracteres',  // NUEVO
+            'username.max' => 'El usuario no puede tener más de 15 caracteres',  // NUEVO
+            'username.regex' => 'El usuario debe empezar con letra y solo contener letras y números',  // NUEVO
+            'username.unique' => 'Este nombre de usuario ya está registrado',  // NUEVO
             'phone.required' => 'El teléfono es obligatorio',
             'phone.unique' => 'Este teléfono ya está registrado',
             'password.required' => 'La contraseña es obligatoria',
             'password.min' => 'La contraseña debe tener al menos 8 caracteres',
-            'password.regex' => 'La contraseña debe contener mayúsculas, minúsculas y números',
             'password.confirmed' => 'Las contraseñas no coinciden',
             'terms.accepted' => 'Debes aceptar los términos y condiciones',
         ]);
@@ -139,7 +177,8 @@ class Register extends Component
         $player = Player::create([
             'tenant_id' => $this->tenant->id,
             'name' => $this->name,
-            'email' => $this->email,
+            'email' => $this->email,  // ELIMINAR
+            'username' => $this->username,  // AGREGAR
             'phone' => $this->phone,
             'password' => Hash::make($this->password),
             'referred_by' => $referrerId,

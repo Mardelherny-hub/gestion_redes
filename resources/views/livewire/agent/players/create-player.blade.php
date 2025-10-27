@@ -40,6 +40,22 @@
                                 @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
+                            {{-- Usuario --}}
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Nombre de Usuario <span class="text-red-600">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    wire:model.live.debounce.500ms="username"
+                                    maxlength="15"
+                                    class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                                    placeholder="Ej: jugador123"
+                                >
+                                <p class="mt-1 text-xs text-gray-500">4-15 caracteres, empieza con letra, solo letras y números</p>
+                                @error('username') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            </div>
+
                             {{-- Teléfono --}}
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

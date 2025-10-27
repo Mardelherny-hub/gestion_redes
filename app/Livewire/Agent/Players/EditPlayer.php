@@ -19,6 +19,8 @@ class EditPlayer extends Component
     public $name = '';
     public $email = '';
     public $phone = '';
+
+    public $username = '';
     
     // Datos originales para el activity log
     public $originalData = [];
@@ -31,6 +33,7 @@ class EditPlayer extends Component
         
         // Cargar datos actuales
         $this->name = $this->player->name;
+        $this->username = $this->player->username;  // NUEVO
         $this->email = $this->player->email;
         $this->phone = $this->player->phone;
         
@@ -50,6 +53,15 @@ class EditPlayer extends Component
         
         $this->validate([
             'name' => 'required|min:3',
+            'username' => [  // NUEVO
+                'required',
+                'min:4',
+                'max:15',
+                'regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
+                Rule::unique('players', 'username')
+                    ->where('tenant_id', $tenantId)
+                    ->ignore($this->playerId)
+            ],
             'email' => [
                 'nullable',
                 'email',
@@ -66,6 +78,11 @@ class EditPlayer extends Component
         ], [
             'name.required' => 'El nombre es obligatorio',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
+            'username.required' => 'El nombre de usuario es obligatorio',  // NUEVO
+            'username.min' => 'El usuario debe tener al menos 4 caracteres',  // NUEVO
+            'username.max' => 'El usuario no puede tener más de 15 caracteres',  // NUEVO
+            'username.regex' => 'El usuario debe empezar con letra y solo contener letras y números',  // NUEVO
+            'username.unique' => 'Este nombre de usuario ya está registrado',  // NUEVO
             'email.email' => 'El email no es válido',
             'email.unique' => 'Este email ya está registrado',
             'phone.required' => 'El teléfono es obligatorio',
@@ -75,6 +92,7 @@ class EditPlayer extends Component
         // Actualizar datos
         $this->player->update([
             'name' => $this->name,
+            'username' => $this->username,  // NUEVO
             'email' => $this->email ?: null,
             'phone' => $this->phone,
         ]);
@@ -83,6 +101,9 @@ class EditPlayer extends Component
         $changes = [];
         if ($this->originalData['name'] !== $this->name) {
             $changes['name'] = ['before' => $this->originalData['name'], 'after' => $this->name];
+        }
+        if ($this->originalData['username'] !== $this->username) {  // NUEVO
+            $changes['username'] = ['before' => $this->originalData['username'], 'after' => $this->username];
         }
         if ($this->originalData['email'] !== $this->email) {
             $changes['email'] = ['before' => $this->originalData['email'], 'after' => $this->email];
@@ -112,7 +133,7 @@ class EditPlayer extends Component
     public function closeModal()
     {
         $this->showModal = false;
-        $this->reset(['playerId', 'player', 'name', 'email', 'phone']);
+        $this->reset(['playerId', 'player', 'name', 'username',  'email', 'phone']);
         $this->originalData = [];
         $this->resetValidation();
     }

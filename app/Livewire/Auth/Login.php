@@ -19,8 +19,8 @@ class Login extends Component
 {
     public ?Tenant $tenant = null;
 
-    #[Rule('required|email')]
-    public string $email = '';
+    #[Rule('required|string')]  // Ya no valida como email
+    public string $credential = ''; 
 
     #[Rule('required|string')]
     public string $password = '';
@@ -36,25 +36,41 @@ class Login extends Component
         $this->validate();
         $this->ensureIsNotRateLimited();
 
-        // PASO 1: Intentar como User (Agente/Admin)
-        $user = User::where('email', $this->email)->first();
-
-        if ($user) {
-            return $this->loginAsUser($user);
-        }
-
-        // PASO 2: Si no es User, intentar como Player (Jugador)
-        $player = Player::where('email', $this->email)->first();
-
-        if ($player) {
-            return $this->loginAsPlayer($player);
+        // Detectar si es email o username
+        $isEmail = filter_var($this->credential, FILTER_VALIDATE_EMAIL);
+        
+        if ($isEmail) {
+            // PASO 1: Intentar como User (Agente/Admin) con email
+            $user = User::where('email', $this->credential)->first();
+            
+            if ($user) {
+                return $this->loginAsUser($user);
+            }
+            
+            // PASO 2: Si no es User, intentar como Player con email (para compatibilidad)
+            $player = Player::where('email', $this->credential)->first();
+            
+            if ($player) {
+                return $this->loginAsPlayer($player);
+            }
+        } else {
+            // Es username -> Solo intentar como Player
+            $player = Player::where('username', $this->credential)
+                ->when($this->tenant, function($q) {
+                    $q->where('tenant_id', $this->tenant->id);
+                })
+                ->first();
+            
+            if ($player) {
+                return $this->loginAsPlayer($player);
+            }
         }
 
         // No se encontró ni User ni Player
         RateLimiter::hit($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => __('Las credenciales no coinciden con nuestros registros.'),
+            'credential' => __('Las credenciales no coinciden con nuestros registros.'),
         ]);
     }
 
@@ -66,19 +82,19 @@ class Login extends Component
         // Verificar si es super admin
         if ($user->is_super_admin) {
             if (!Auth::guard('web')->attempt(
-                ['email' => $this->email, 'password' => $this->password],
+                ['email' => $this->credential, 'password' => $this->password],
                 $this->remember
             )) {
                 RateLimiter::hit($this->throttleKey());
                 throw ValidationException::withMessages([
-                    'email' => __('Las credenciales no coinciden con nuestros registros.'),
+                    'credential' => __('Las credenciales no coinciden con nuestros registros.'),
                 ]);
             }
 
             if (!$user->is_active) {
                 Auth::guard('web')->logout();
                 throw ValidationException::withMessages([
-                    'email' => __('Tu cuenta ha sido desactivada. Contacta al administrador.'),
+                    'credential' => __('Tu cuenta ha sido desactivada. Contacta al administrador.'),
                 ]);
             }
 
@@ -92,31 +108,31 @@ class Login extends Component
 
         if (!$currentTenant) {
             throw ValidationException::withMessages([
-                'email' => 'No se pudo identificar el cliente.',
+                'credential' => 'No se pudo identificar el cliente.',
             ]);
         }
 
         if ($user->tenant_id !== $currentTenant->id) {
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
-                'email' => __('Las credenciales no coinciden con nuestros registros.'),
+                'credential' => __('Las credenciales no coinciden con nuestros registros.'),
             ]);
         }
 
         if (!Auth::guard('web')->attempt(
-            ['email' => $this->email, 'password' => $this->password, 'tenant_id' => $currentTenant->id],
+            ['email' => $this->credential, 'password' => $this->password, 'tenant_id' => $currentTenant->id],
             $this->remember
         )) {
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
-                'email' => __('Las credenciales no coinciden con nuestros registros.'),
+                'credential' => __('Las credenciales no coinciden con nuestros registros.'),
             ]);
         }
 
         if (!$user->is_active) {
             Auth::guard('web')->logout();
             throw ValidationException::withMessages([
-                'email' => __('Tu cuenta ha sido desactivada. Contacta al administrador.'),
+                'credential' => __('Tu cuenta ha sido desactivada. Contacta al administrador.'),
             ]);
         }
 
@@ -211,7 +227,7 @@ class Login extends Component
     protected function throttleKey(): string
     {
         return Str::transliterate(
-            Str::lower($this->email) . '|' . request()->ip()
+            Str::lower($this->credential) . '|' . request()->ip()
         );
     }
 

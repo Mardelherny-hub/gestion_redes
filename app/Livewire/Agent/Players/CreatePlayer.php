@@ -19,12 +19,13 @@ class CreatePlayer extends Component
     public $email = '';
     public $phone = '';
     public $initial_balance = 0;
+    public $username = '';
 
     #[On('openCreatePlayer')]
     
     public function openModal()
     {
-        $this->reset(['name', 'email', 'phone', 'initial_balance']);
+        $this->reset(['name', 'email', 'phone', 'initial_balance', 'username']);
         $this->resetValidation();
         $this->showModal = true;
     }
@@ -36,6 +37,14 @@ class CreatePlayer extends Component
 
         $this->validate([
             'name' => 'required|min:3',
+            'username' => [  // NUEVO
+                'required',
+                'min:4',
+                'max:15',
+                'regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
+                Rule::unique('players', 'username')
+                    ->where('tenant_id', $tenantId)
+            ],
             'email' => [
                 'nullable',
                 'email',
@@ -51,6 +60,11 @@ class CreatePlayer extends Component
         ], [
             'name.required' => 'El nombre es obligatorio',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
+            'username.required' => 'El nombre de usuario es obligatorio',  // NUEVO
+            'username.min' => 'El usuario debe tener al menos 4 caracteres',  // NUEVO
+            'username.max' => 'El usuario no puede tener más de 15 caracteres',  // NUEVO
+            'username.regex' => 'El usuario debe empezar con letra y solo contener letras y números',  // NUEVO
+            'username.unique' => 'Este nombre de usuario ya está registrado',  // NUEVO
             'email.email' => 'El email no es válido',
             'email.unique' => 'Este email ya está registrado',
             'phone.required' => 'El teléfono es obligatorio',
@@ -68,6 +82,7 @@ class CreatePlayer extends Component
         $player = Player::create([
             'tenant_id' => $tenantId,
             'name' => $this->name,
+            'username' => $this->username,  // NUEVO
             'email' => $this->email ?: null,
             'phone' => $this->phone,
             'balance' => $this->initial_balance ?? 0,
@@ -84,14 +99,16 @@ class CreatePlayer extends Component
         $this->showToast('Jugador creado correctamente', 'success');
 
         $this->closeModal();
+        
+        // AGREGAR ESTAS LÍNEAS:
         $this->dispatch('playerCreated');
-        $this->dispatch('$refresh');
+        $this->dispatch('playerUpdated'); // ← IMPORTANTE: esto refresca la lista
     }
 
     public function closeModal()
     {
         $this->showModal = false;
-        $this->reset(['name', 'email', 'phone', 'initial_balance']);
+        $this->reset(['name', 'email', 'phone', 'initial_balance', 'username']);
         $this->resetValidation();
     }
 

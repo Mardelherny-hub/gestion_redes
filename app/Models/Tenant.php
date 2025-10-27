@@ -27,12 +27,20 @@ class Tenant extends Model
         'monthly_fee',
         'chips_balance',
         'chip_price',
+        'welcome_bonus_enabled',
+        'welcome_bonus_amount',
+        'referral_bonus_enabled',
+        'referral_bonus_amount',        
+        'referral_bonus_enabled' => 'boolean',
+        'referral_bonus_amount' => 'decimal:2',
     ];
 
     protected $casts = [
         'settings' => 'array',
         'bank_accounts' => 'array',
         'is_active' => 'boolean',
+        'welcome_bonus_enabled' => 'boolean',
+        'welcome_bonus_amount' => 'decimal:2',
     ];
 
     // Relaciones

@@ -29,20 +29,24 @@ class BonusService
     ): Bonus {
         return DB::transaction(function () use ($player, $type, $amount, $description, $expiresAt) {
             
+            // IMPORTANTE: Capturar balance ANTES de incrementar
+            $balanceBefore = $player->balance;
+            $balanceAfter = $balanceBefore + $amount;
+            
             // Actualizar saldo del jugador
             $player->increment('balance', $amount);
             
-            // Crear transacción de tipo bonus
-            // Crear transacción de tipo bonus
+            // Crear transacción de tipo bonus con balance_before y balance_after
             $transaction = Transaction::create([
                 'tenant_id' => $player->tenant_id,
                 'player_id' => $player->id,
                 'type' => 'bonus',
                 'amount' => $amount,
-                'balance_before' => $player->balance, // ← AGREGAR ESTA LÍNEA
+                'balance_before' => $balanceBefore,
+                'balance_after' => $balanceAfter,
                 'status' => 'completed',
-                'description' => $description ?? "Bono {$type}",
-                'hash' => Str::random(32),
+                'notes' => $description ?? "Bono {$type}",
+                'transaction_hash' => Str::uuid(),
             ]);
             
             // Crear registro del bono
@@ -51,7 +55,7 @@ class BonusService
                 'player_id' => $player->id,
                 'type' => $type,
                 'amount' => $amount,
-                'status' => 'used', // Ya se aplicó al saldo
+                'status' => 'used',
                 'used_at' => now(),
                 'expires_at' => $expiresAt,
                 'related_transaction_id' => $transaction->id,

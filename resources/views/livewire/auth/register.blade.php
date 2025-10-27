@@ -5,7 +5,21 @@
     <!-- Título -->
     <div class="text-center mb-6">
         <h2 class="text-2xl font-bold text-white mb-2">Crear Cuenta</h2>
-        <p class="text-gray-400 text-sm">🎁 Bono 30% en tu primera carga!</p>
+        @if($welcomeBonusAmount > 0)
+            <div class="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 rounded-lg p-4 mb-6">
+                <div class="flex items-center gap-3">
+                    <div class="flex-shrink-0">
+                        <svg class="w-10 h-10 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-bold text-yellow-400">¡Bono de Bienvenida!</h3>
+                        <p class="text-white text-sm">Regístrate y recibe <span class="font-bold text-xl">${{ number_format($welcomeBonusAmount, 2) }}</span> de regalo</p>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
     <!-- Formulario -->
@@ -34,20 +48,45 @@
             @enderror
         </div>
 
-        <!-- Email -->
+        <!-- Usuario de la Plataforma -->
         <div>
             <label class="block text-sm font-medium text-gray-300 mb-1.5">
-                Email <span class="text-red-400">*</span>
+                Usuario de la Plataforma <span class="text-red-400">*</span>
             </label>
-            <input 
-                type="email" 
-                wire:model.blur="email"
-                placeholder="tu@email.com"
-                required
-                class="w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition
-                    {{ $errors->has('email') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
-            >
-            @error('email') 
+            <div class="relative">
+                <input 
+                    type="text" 
+                    wire:model.live.debounce.500ms="username"
+                    placeholder="Ej: jugador123"
+                    required
+                    maxlength="15"
+                    class="w-full px-4 py-3 pr-10 bg-white/5 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition
+                        {{ $errors->has('username') ? 'border-red-500' : ($usernameValid === true ? 'border-green-500' : ($usernameValid === false ? 'border-red-500' : 'border-white/10 focus:border-white/30')) }}"
+                >
+                @if($usernameValid === true)
+                    <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                @elseif($usernameValid === false)
+                    <div class="absolute right-3 top-1/2 -translate-y-1/2">
+                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                @endif
+            </div>
+            <p class="text-gray-400 text-xs mt-1.5 flex items-center gap-1">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+                <strong>Usa el mismo usuario que tienes en la plataforma del casino</strong>
+            </p>
+            <p class="text-gray-500 text-xs mt-1">
+                4-15 caracteres, debe empezar con letra, solo letras y números
+            </p>
+            @error('username') 
                 <p class="text-red-400 text-xs mt-1.5 flex items-center gap-1">
                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
