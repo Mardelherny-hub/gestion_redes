@@ -47,6 +47,15 @@
                         </svg>
                         Retirar Fondos
                     </button>
+
+                     {{-- NUEVO: Botón Configurar Cuentas --}}
+                    {{-- <a href="{{ route('player.withdrawal-accounts') }}" wire:navigate
+                        class="px-8 py-4 bg-blue-600 rounded-xl font-bold text-white text-lg hover:bg-blue-700 transition-all shadow-lg flex items-center justify-center gap-3">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                        </svg>
+                        Mis Cuentas
+                    </a> --}}
                 </div>
 
             </div>

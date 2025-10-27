@@ -186,6 +186,18 @@
                                 <span>Ruleta</span>
                             </div>
                         </a>
+
+                        <!-- Mis Cuentas -->
+                        <a href="{{ route('player.withdrawal-accounts') }}" wire:navigate
+                        class="px-4 py-4 text-sm font-medium transition border-b-2 {{ request()->routeIs('player.withdrawal-accounts') ?
+                            'border-white text-white' : 'border-transparent text-gray-300 hover:text-white hover:border-gray-400' }}">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                                <span>Mis Cuentas</span>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </nav>
@@ -254,6 +266,17 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span>Ruleta</span>
+                        </a>
+
+                        <a href="{{ route('player.withdrawal-accounts') }}" wire:navigate
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('player.withdrawal-accounts') ?
+                            'bg-gray-700 border-l-4 border-white text-white' : 'border-transparent text-gray-300 hover:text-white hover:bg-gray-700' }}">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+                                </svg>
+                                <span>Mis Cuentas</span>
+                            </div>
                         </a>
                     </nav>
                 </div>

@@ -36,14 +36,11 @@ Route::prefix('player')
         // Referidos
         Route::view('/referrals', 'player.referrals')->name('referrals');
 
-        //Route::get('/chat', fn() => view('player.chat'))->name('chat');
-
-        //
-        Route::get('/bonuses', fn() => view('player.bonuses'))->name('bonuses');
-
+        // Cuentas de Retiro - NUEVA RUTA
+        Route::view('/withdrawal-accounts', 'player.withdrawal-accounts')->name('withdrawal-accounts');
+        
         // Ruleta de la Suerte
         Route::get('/wheel', fn() => view('player.wheel'))->name('wheel');
-
 
         // Logout
         Route::post('/logout', function () {

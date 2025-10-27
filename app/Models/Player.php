@@ -132,6 +132,16 @@ class Player extends Authenticatable
             ->log('player_activated');
     }
 
+    public function withdrawalAccounts()
+    {
+        return $this->hasMany(PlayerWithdrawalAccount::class);
+    }
+
+    public function defaultWithdrawalAccount()
+    {
+        return $this->hasOne(PlayerWithdrawalAccount::class)->where('is_default', true);
+    }
+
     public static function generateUniqueReferralCode(): string
     {
         do {
