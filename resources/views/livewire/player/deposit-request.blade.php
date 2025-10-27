@@ -82,7 +82,7 @@
                     </div>
 
                     <!-- Titular de cuenta -->
-                    <div>
+                    {{-- <div>
                         <label class="block text-sm font-medium text-gray-300 mb-2">
                             Titular de la cuenta <span class="text-red-400">*</span>
                         </label>
@@ -100,10 +100,10 @@
                                 {{ $message }}
                             </p> 
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <!-- Número de cuenta / Alias -->
-                    <div>
+                    {{-- <div>
                         <label class="block text-sm font-medium text-gray-300 mb-2">
                             Número de cuenta o Alias <span class="text-red-400">*</span>
                         </label>
@@ -121,7 +121,7 @@
                                 {{ $message }}
                             </p> 
                         @enderror
-                    </div>
+                    </div> --}}
 
                     <!-- Upload Comprobante -->
                     <div>

@@ -17,7 +17,7 @@
 
     <!-- Lista de Cuentas -->
     <div class="grid gap-4">
-        @forelse($accounts as $account) //
+        @forelse($accounts ?? [] as $account)
             <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition">
                 <div class="flex items-start justify-between">
                     <!-- Info Principal -->
@@ -134,7 +134,7 @@
     </div>
 
     <!-- Modal Crear/Editar -->
-    @if($showModal)
+    @if($this->showModal)
     <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <!-- Header -->
@@ -275,7 +275,7 @@
                     <button 
                         type="submit"
                         class="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">
-                        {{ $editMode ? 'Actualizar' : 'Crear' }}
+                        {{ $this->editMode ? 'Actualizar' : 'Crear' }}
                     </button>
                 </div>
             </form>

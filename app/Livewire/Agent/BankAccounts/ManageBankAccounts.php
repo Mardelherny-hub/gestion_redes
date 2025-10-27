@@ -77,7 +77,6 @@ class ManageBankAccounts extends Component
         $tenant = auth()->user()->tenant;
 
         if ($this->editMode) {
-            // Actualizar
             $account = BankAccount::findOrFail($this->accountId);
             $account->update([
                 'account_holder' => $this->account_holder,
@@ -96,7 +95,6 @@ class ManageBankAccounts extends Component
 
             $this->showToast('Cuenta actualizada correctamente', 'success');
         } else {
-            // Crear nueva
             $account = BankAccount::create([
                 'tenant_id' => $tenant->id,
                 'account_holder' => $this->account_holder,
@@ -106,7 +104,7 @@ class ManageBankAccounts extends Component
                 'cvu' => $this->cvu,
                 'notes' => $this->notes,
                 'status' => $this->status,
-                'is_active' => false, // Por defecto no activa
+                'is_active' => false,
             ]);
 
             activity()
@@ -125,11 +123,9 @@ class ManageBankAccounts extends Component
     {
         $tenant = auth()->user()->tenant;
 
-        // Desactivar todas las cuentas del tenant
         BankAccount::where('tenant_id', $tenant->id)
             ->update(['is_active' => false]);
 
-        // Activar la seleccionada
         $account = BankAccount::findOrFail($id);
         $account->update(['is_active' => true]);
 
@@ -170,21 +166,18 @@ class ManageBankAccounts extends Component
     }
 
     #[On('bankAccountUpdated')]
-public function refreshAccounts()
-{
-    // Simplemente refrescar el componente
-}
+    public function refreshAccounts()
+    {
+        // Refresh automático del componente
+    }
 
-public function render()
-{
-    $tenant = auth()->user()->tenant;
-    
-    $accounts = BankAccount::where('tenant_id', $tenant->id)
-        ->orderBy('is_active', 'desc')
-        ->orderBy('created_at', 'desc')
-        ->get();
+    public function render()
+    {
+        $accounts = BankAccount::where('tenant_id', auth()->user()->tenant->id)
+            ->orderBy('is_active', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return view('livewire.agent.bank-accounts.manage-bank-accounts')
-        ->with('accounts', $accounts);
-}
+        return view('livewire.agent.bank-accounts.manage-bank-accounts', compact('accounts'));
+    }
 }

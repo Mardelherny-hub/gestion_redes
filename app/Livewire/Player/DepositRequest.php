@@ -15,8 +15,8 @@ class DepositRequest extends Component
     public $isOpen = false;
     public $amount = '';
     public $receipt;
-    public $accountHolder = '';
-    public $accountNumber = '';
+    //public $accountHolder = '';
+    //public $accountNumber = '';
     
     public $tenant;
     public $player;
@@ -26,7 +26,7 @@ class DepositRequest extends Component
     public function mount()
     {
         $this->player = auth()->guard('player')->user();
-        $this->tenant = $this->player->tenant->load('activeBankAccount');
+        $this->tenant = $this->player->tenant;
     }
 
     public function open()
@@ -44,7 +44,7 @@ class DepositRequest extends Component
 
     public function close()
     {
-        $this->reset(['amount', 'receipt', 'accountHolder', 'accountNumber']);
+        $this->reset(['amount', 'receipt'/* , 'accountHolder', 'accountNumber' */]);
         $this->isOpen = false;
     }
 
@@ -64,8 +64,8 @@ class DepositRequest extends Component
         'receipt.required' => 'Debes subir el comprobante',
         'receipt.image' => 'El comprobante debe ser una imagen',
         'receipt.max' => 'La imagen no puede pesar más de 5MB',
-        'accountHolder.required' => 'Ingresa el titular de la cuenta',
-        'accountNumber.required' => 'Ingresa el número de cuenta',
+        //'accountHolder.required' => 'Ingresa el titular de la cuenta',
+        //'accountNumber.required' => 'Ingresa el número de cuenta',
     ];
 
     public function submit()
@@ -85,7 +85,8 @@ class DepositRequest extends Component
             'balance_after' => $this->player->balance,
             'status' => 'pending',
             'proof_url' => $receiptUrl,
-            'notes' => "Titular: {$this->accountHolder} | Cuenta: {$this->accountNumber}",
+            //'notes' => "Titular: {$this->accountHolder} | Cuenta: {$this->accountNumber}",
+            'notes' => "Depósito realizado",
         ]);
 
         // Activity log
