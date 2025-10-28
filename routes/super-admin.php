@@ -5,6 +5,7 @@ use App\Livewire\SuperAdmin\Clients\Index as ClientsIndex;
 use App\Livewire\SuperAdmin\Clients\Create as ClientsCreate;
 use App\Livewire\SuperAdmin\Clients\Edit as ClientsEdit;
 use App\Livewire\SuperAdmin\Clients\Show as ClientsShow;
+use App\Livewire\SuperAdmin\AgentTransactionHistory;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('super-admin')
@@ -23,6 +24,10 @@ Route::prefix('super-admin')
             Route::get('/{tenant}', ClientsShow::class)->name('show');  // NUEVO
             Route::get('/{tenant}/edit', ClientsEdit::class)->name('edit');
         });
+
+        // Historial de transacciones de agentes - AGREGAR ESTAS LÍNEAS
+        Route::get('/agents/{agent}/transactions', AgentTransactionHistory::class)
+            ->name('agents.transactions');
 
         // Aquí irían más rutas de super admin en el futuro
         // Route::get('/reports', Reports::class)->name('reports');

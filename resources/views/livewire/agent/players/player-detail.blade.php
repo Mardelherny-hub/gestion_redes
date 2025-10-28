@@ -126,18 +126,40 @@
                                 @endif
 
                                 @if($referrals->count() > 0)
-                                    <div>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Jugadores Referidos ({{ $referrals->count() }})</p>
-                                        <div class="space-y-2">
-                                            @foreach($referrals as $referral)
-                                                <div class="flex justify-between items-center bg-gray-50 dark:bg-gray-700 p-2 rounded">
-                                                    <span class="text-sm text-gray-900 dark:text-white">{{ $referral->name }}</span>
-                                                    <span class="text-xs text-gray-500 dark:text-gray-400">${{ number_format($referral->balance, 2) }}</span>
+                                <div>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Jugadores Referidos ({{ $referrals->count() }})</p>
+                                    <div class="space-y-2 max-h-64 overflow-y-auto">
+                                        @foreach($referrals as $referral)
+                                            <div class="flex items-center justify-between p-3 bg-white dark:bg-gray-600 rounded-lg border border-gray-200 dark:border-gray-500">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
+                                                        {{ substr($referral->name, 0, 1) }}
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-medium text-gray-900 dark:text-white text-sm">{{ $referral->name }}</p>
+                                                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                            Registrado: {{ $referral->created_at->format('d/m/Y') }}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                            @endforeach
-                                        </div>
+                                                <div class="text-right">
+                                                    <span class="inline-block px-2 py-1 text-xs rounded-full mb-1
+                                                        {{ $referral->status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
+                                                        {{ $referral->status === 'suspended' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' : '' }}
+                                                        {{ $referral->status === 'blocked' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}">
+                                                        {{ ucfirst($referral->status) }}
+                                                    </span>
+                                                    <p class="text-xs text-gray-600 dark:text-gray-400">
+                                                        Saldo: ${{ number_format($referral->balance, 2) }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                @endif
+                                </div>
+                            @else
+                                <p class="text-lg text-red-500 dark:text-red-400">No ha referido a ningún jugador aún</p>
+                            @endif
                             </div>
                         </div>
 

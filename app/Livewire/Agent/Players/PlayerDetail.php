@@ -24,7 +24,7 @@ class PlayerDetail extends Component
     {
         $this->player = Player::with([
             'referrer:id,name',
-            'referrals:id,name,balance,status,created_at',
+            'referrals:id,name,balance,status,created_at,referred_by',
             'transactions' => fn($q) => $q->latest()->limit(10),
             'bonuses' => fn($q) => $q->latest()->limit(10)
         ])->findOrFail($playerId);
