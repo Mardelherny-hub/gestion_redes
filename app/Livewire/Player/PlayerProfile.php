@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 class PlayerProfile extends Component
 {
     public $name;
+    public $username; 
     public $email;
     public $phone;
     public $current_password = '';
@@ -18,6 +19,7 @@ class PlayerProfile extends Component
     {
         $player = auth()->guard('player')->user();
         $this->name = $player->name;
+        $this->username = $player->username;
         $this->email = $player->email;
         $this->phone = $player->phone;
     }
@@ -26,11 +28,25 @@ class PlayerProfile extends Component
     {
         $this->validate([
             'name' => 'required|min:3|max:255',
+            'username' => [  // AGREGADO
+                'required',
+                'min:10',
+                'max:15',
+                'regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
+                Rule::unique('players', 'username')
+                    ->where('tenant_id', $player->tenant_id)
+                    ->ignore($player->id)
+            ],
             'email' => 'required|email|max:255|unique:players,email,' . auth()->guard('player')->id(),
             'phone' => 'required|min:10|max:20',
         ], [
             'name.required' => 'El nombre es obligatorio',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
+            'username.required' => 'El nombre de usuario es obligatorio',
+            'username.min' => 'El nombre de usuario debe tener al menos 10 caracteres',
+            'username.max' => 'El nombre de usuario no puede tener más de 15 caracteres',
+            'username.regex' => 'El nombre de usuario solo puede contener letras y números',
+            'username.unique' => 'Este nombre de usuario ya está en uso',
             'email.required' => 'El email es obligatorio',
             'email.email' => 'El email debe ser válido',
             'email.unique' => 'Este email ya está en uso',
@@ -42,6 +58,7 @@ class PlayerProfile extends Component
         
         $player->update([
             'name' => $this->name,
+            'username' => $this->username,
             'email' => $this->email,
             'phone' => $this->phone,
         ]);

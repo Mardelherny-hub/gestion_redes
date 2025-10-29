@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Casino') }} - {{ auth()->guard('player')->user()->name }}</title>
+        <title>{{ config('app.name', 'Casino') }} - {{ auth()->guard('player')->user()->username }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -37,10 +37,27 @@
                                 @endphp
                                 
                                 @if($tenant->logo)
-                                    <img src="{{ Storage::url($tenant->logo) }}" alt="{{ $tenant->name }}" class="h-10 w-auto">
-                                @else
-                                    <span class="text-xl sm:text-2xl font-bold text-white">{{ $tenant->name }}</span>
-                                @endif
+                                <img 
+                                    src="{{ Storage::url($tenant->logo) }}" 
+                                    alt="{{ $tenant->name }}" 
+                                    class="h-10 w-auto object-contain"
+                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="hidden items-center gap-2">
+                                    <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-xl" 
+                                        style="background: linear-gradient(135deg, {{ $tenant->primary_color ?? '#6366f1' }} 0%, {{ $tenant->secondary_color ?? '#8b5cf6' }} 100%);">
+                                        {{ strtoupper(substr($tenant->name, 0, 1)) }}
+                                    </div>
+                                    <span class="text-xl font-bold text-white">{{ $tenant->name }}</span>
+                                </div>
+                            @else
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold text-xl" 
+                                        style="background: linear-gradient(135deg, {{ $tenant->primary_color ?? '#6366f1' }} 0%, {{ $tenant->secondary_color ?? '#8b5cf6' }} 100%);">
+                                        {{ strtoupper(substr($tenant->name, 0, 1)) }}
+                                    </div>
+                                    <span class="text-xl font-bold text-white">{{ $tenant->name }}</span>
+                                </div>
+                            @endif
                             </div>
                         </div>
 
@@ -83,9 +100,9 @@
                                 <button @click="open = !open" class="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-700 transition">
                                     <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg"
                                          style="background-color: {{ $tenant->primary_color }}">
-                                        {{ substr(auth()->guard('player')->user()->name, 0, 1) }}
+                                        {{ substr(auth()->guard('player')->user()->username, 0, 1) }}
                                     </div>
-                                    <span class="hidden sm:block text-white font-medium">{{ auth()->guard('player')->user()->name }}</span>
+                                    <span class="hidden sm:block text-white font-medium">{{ auth()->guard('player')->user()->username }}</span>
                                     <svg class="w-4 h-4 text-gray-400 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                                     </svg>
@@ -105,10 +122,10 @@
                                     
                                     <div class="py-2">
                                         <!-- Saldo (móvil) -->
-                                        <div class="sm:hidden px-4 py-3 border-b border-gray-700">
+                                        {{-- <div class="sm:hidden px-4 py-3 border-b border-gray-700">
                                             <p class="text-xs text-gray-400">Saldo actual</p>
                                             <p class="text-lg font-bold text-white">${{ number_format(auth()->guard('player')->user()->balance, 2) }}</p>
-                                        </div>
+                                        </div> --}}
 
                                         <!-- Mi Perfil -->
                                         <a href="{{ route('player.profile') }}" wire:navigate

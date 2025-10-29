@@ -44,7 +44,7 @@ class DepositRequest extends Component
 
     public function close()
     {
-        $this->reset(['amount', 'receipt'/* , 'accountHolder', 'accountNumber' */]);
+        $this->reset(['amount', 'receipt']);
         $this->isOpen = false;
     }
 
@@ -53,8 +53,8 @@ class DepositRequest extends Component
         return [
             'amount' => 'required|numeric|min:100',
             'receipt' => 'required|image|max:5120', // 5MB max
-            'accountHolder' => 'required|string|min:3',
-            'accountNumber' => 'required|string|min:8',
+            //'accountHolder' => 'required|string|min:3',
+            //'accountNumber' => 'required|string|min:8',
         ];
     }
 
@@ -95,7 +95,7 @@ class DepositRequest extends Component
             ->causedBy($this->player)
             ->withProperties([
                 'amount' => $this->amount,
-                'account_holder' => $this->accountHolder
+                //'account_holder' => $this->accountHolder
             ])
             ->log('deposit_requested');
 

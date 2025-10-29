@@ -23,9 +23,27 @@
                     @endif
 
                     <form wire:submit.prevent="updateProfile" class="space-y-4">
+                        
+                        <!-- Username (NUEVO - DESTACADO) -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                Nombre de Usuario Plataforma<span class="text-red-500">*</span>
+                            </label>
+                            <input 
+                                wire:model="username" 
+                                type="text"
+                                maxlength="15"
+                                class="w-full px-4 py-2 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white font-mono text-lg"
+                                placeholder="Ej: jugador123">
+                            <p class="mt-1 text-xs text-gray-500">Este es tu usuario para iniciar sesión. 4-15 caracteres, empieza con letra</p>
+                            @error('username')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
                         <!-- Nombre -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nombre Completo</label>
                             <input 
                                 wire:model="name" 
                                 type="text"
@@ -132,16 +150,21 @@
                 
                 <div class="space-y-3">
                     <div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">Usuario</p>
+                        <p class="text-lg font-bold text-blue-600 dark:text-blue-400 font-mono">{{ $player->username }}</p>
+                    </div>
+                    
+                    <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400">ID de Jugador</p>
                         <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $player->id }}</p>
                     </div>
                     
-                    <div>
+                    {{-- <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400">Saldo Actual</p>
                         <p class="text-2xl font-bold text-green-600 dark:text-green-400">
                             ${{ number_format($player->balance, 2) }}
                         </p>
-                    </div>
+                    </div> --}}
                     
                     <div>
                         <p class="text-xs text-gray-500 dark:text-gray-400">Estado</p>
@@ -163,19 +186,12 @@
             </div>
 
             <!-- Código de Referido -->
-            @if($player->referral_code)
-            <div class="bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg shadow p-6 text-white">
+            <div class="bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg shadow p-6 text-white">
                 <h3 class="font-semibold mb-2">Tu Código de Referido</h3>
-                <div class="bg-white bg-opacity-20 rounded-lg p-3 mb-3">
-                    <p class="text-2xl font-bold text-center tracking-wider">{{ $player->referral_code }}</p>
-                </div>
-                <a href="{{ route('player.referrals') }}" 
-                   class="block text-center text-sm hover:underline">
-                    Ver mis referidos →
-                </a>
+                <p class="text-3xl font-bold font-mono mb-2">{{ $player->referral_code }}</p>
+                <p class="text-sm opacity-90">Comparte con amigos y gana bonos</p>
             </div>
-            @endif
         </div>
     </div>
-</div>
+    </div>
 </div>

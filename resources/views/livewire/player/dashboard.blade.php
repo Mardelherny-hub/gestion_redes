@@ -7,7 +7,7 @@
     <!-- Bienvenida + Saldo Destacado -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-white mb-6">
-            Bienvenido, {{ $player->name }}
+            Bienvenido, {{ $player->username }}
         </h1>
 
         <!-- Card de Saldo Principal -->
@@ -98,6 +98,7 @@
                     @if($tenant->casino_url)
                         <button 
                             wire:click="$dispatch('openCasinoModal')"
+                            
                             class="px-6 py-4 rounded-xl font-bold text-white text-lg hover:shadow-xl transition-all shadow-lg flex items-center justify-center gap-3"
                             style="background: linear-gradient(135deg, {{ $tenant->primary_color }} 0%, {{ $tenant->secondary_color }} 100%);"
                         >
@@ -255,5 +256,8 @@
 
     <!-- Modal de Retiro -->
     @livewire('player.withdrawal-request')
+
+
+    @livewire('player.casino-link')
 
 </div>
