@@ -43,14 +43,14 @@
             <label class="block text-sm font-medium text-gray-300 mb-1.5">
                 Contraseña <span class="text-red-400">*</span>
             </label>
-            <input 
-                type="password" 
-                wire:model.blur="password"
+            <x-password-input 
+                id="password"
+                name="password"
+                model="password"
                 placeholder="••••••••"
                 required
-                class="w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition
-                    {{ $errors->has('password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
-            >
+                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
+            />
             @error('password') 
                 <p class="text-red-400 text-xs mt-1.5 flex items-center gap-1">
                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">

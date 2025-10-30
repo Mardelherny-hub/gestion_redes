@@ -13,6 +13,7 @@ use App\Models\Tenant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use App\Livewire\Traits\WithToast;
+use App\Services\MessageService;
 
 class Dashboard extends Component
 {
@@ -68,6 +69,27 @@ class Dashboard extends Component
         $this->showToast('Código copiado al portapapeles', 'success');
     }
 
+    public function requestUnblock()
+    {
+        app(MessageService::class)->sendSystemMessage(
+            $this->player,
+            "🔓 Solicito desbloqueo de mi usuario en la plataforma del casino",
+            'support'
+        );
+        
+        $this->showToast('✅ Solicitud enviada. El agente te responderá pronto por el chat.', 'success');
+    }
+
+    public function requestPasswordChange()
+    {
+        app(MessageService::class)->sendSystemMessage(
+            $this->player,
+            "🔑 Solicito cambio de contraseña de mi usuario en la plataforma del casino",
+            'support'
+        );
+        
+        $this->showToast('✅ Solicitud enviada. El agente te responderá pronto por el chat.', 'success');
+    }
     public function render()
     {
         return view('livewire.player.dashboard')

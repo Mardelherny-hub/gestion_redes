@@ -101,10 +101,14 @@
                         <!-- Contraseña Actual -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contraseña Actual</label>
-                            <input 
-                                wire:model="current_password" 
-                                type="password"
-                                class="w-full px-4 py-2 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                            <x-password-input 
+                                id="password"
+                                name="password"
+                                model="password"
+                                placeholder="••••••••"
+                                required
+                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
+                            />
                             @error('current_password')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -113,10 +117,14 @@
                         <!-- Nueva Contraseña -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nueva Contraseña</label>
-                            <input 
-                                wire:model="new_password" 
-                                type="password"
-                                class="w-full px-4 py-2 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                            <x-password-input 
+                                id="password"
+                                name="password"
+                                model="password"
+                                placeholder="••••••••"
+                                required
+                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
+                            />
                             @error('new_password')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
@@ -125,10 +133,14 @@
                         <!-- Confirmar Nueva Contraseña -->
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmar Nueva Contraseña</label>
-                            <input 
-                                wire:model="new_password_confirmation" 
-                                type="password"
-                                class="w-full px-4 py-2 rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                            <x-password-input 
+                                id="password"
+                                name="password"
+                                model="password"
+                                placeholder="••••••••"
+                                required
+                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
+                            />
                         </div>
 
                         <button 

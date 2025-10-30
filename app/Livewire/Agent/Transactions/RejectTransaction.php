@@ -9,6 +9,8 @@ use App\Livewire\Traits\WithToast;
 
 class RejectTransaction extends Component
 {
+    use WithToast;
+
     public $transaction;
     public $isOpen = false;
     public $rejectionReason = '';

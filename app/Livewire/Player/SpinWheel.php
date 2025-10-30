@@ -23,15 +23,20 @@ class SpinWheel extends Component
     {
         $player = auth()->guard('player')->user();
         $this->hasSpunToday = !$this->wheelService->canSpinToday($player);
+        $this->isSpinning = false; // ← AGREGAR ESTA LÍNEA
+        $this->showResult = false; // ← AGREGAR ESTA LÍNEA
+
+         
+    // DEBUG - Eliminar después
+    logger()->info('SpinWheel Mount', [
+        'isSpinning' => $this->isSpinning,
+        'hasSpunToday' => $this->hasSpunToday
+    ]);
     }
 
     public function spin()
     {
-        if ($this->hasSpunToday) {
-            session()->flash('error', 'Ya giraste la ruleta hoy. Vuelve mañana!');
-            return;
-        }
-
+        // Verificar SOLO isSpinning (no hasSpunToday, eso lo maneja el service)
         if ($this->isSpinning) {
             return;
         }
@@ -44,7 +49,8 @@ class SpinWheel extends Component
             $result = $this->wheelService->spin($player);
             
             $this->lastPrize = $result['prize'];
-            $this->hasSpunToday = true;
+            
+            // NO actualizar hasSpunToday aquí, hacerlo en showPrizeResult
             
             // Esperar a que termine la animación
             $this->dispatch('spin-complete', prize: $this->lastPrize);
@@ -59,7 +65,9 @@ class SpinWheel extends Component
     {
         $this->showResult = true;
         $this->isSpinning = false;
+        $this->hasSpunToday = true; // ← MOVER AQUÍ
     }
+
 
     public function closeResult()
     {

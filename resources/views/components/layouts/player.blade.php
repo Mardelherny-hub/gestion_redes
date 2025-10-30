@@ -193,6 +193,17 @@
                             </div>
                         </a>
 
+                        <!-- Referidos -->
+                        <a href="{{ route('player.referrals') }}" wire:navigate
+                        class="px-4 py-4 text-sm font-medium transition border-b-2 {{ request()->routeIs('player.referrals') ? 'border-white text-white' : 'border-transparent text-gray-300 hover:text-white hover:border-gray-400' }}">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                </svg>
+                                <span>Referidos</span>
+                            </div>
+                        </a>
+
                         <!-- Ruleta -->
                         <a href="{{ route('player.wheel') }}" wire:navigate
                            class="px-4 py-4 text-sm font-medium transition border-b-2 {{ request()->routeIs('player.wheel') ? 'border-white text-white' : 'border-transparent text-gray-300 hover:text-white hover:border-gray-400' }}">
@@ -275,6 +286,14 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/>
                             </svg>
                             <span>Bonos</span>
+                        </a>
+
+                        <a href="{{ route('player.referrals') }}" wire:navigate
+                            class="flex items-center gap-3 px-4 py-3 rounded-lg transition {{ request()->routeIs('player.referrals') ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white' }}">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            <span>Referidos</span>
                         </a>
 
                         <a href="{{ route('player.wheel') }}" wire:navigate

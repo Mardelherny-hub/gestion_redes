@@ -53,7 +53,7 @@ class TransactionObserver
             }
 
             if ($transaction->status === 'rejected') {
-                $reason = $transaction->rejection_reason ?? 'No se especificó un motivo';
+                $reason = $transaction->notes ?? 'No se especificó un motivo';
                 $this->messageService->notifyDepositRejected($transaction, $reason);
             }
         }
@@ -65,7 +65,7 @@ class TransactionObserver
             }
 
             if ($transaction->status === 'rejected') {
-                $reason = $transaction->rejection_reason ?? 'No se especificó un motivo';
+                $reason = $transaction->notes ?? 'No se especificó un motivo';
                 $this->messageService->notifyWithdrawalRejected($transaction, $reason);
             }
         }

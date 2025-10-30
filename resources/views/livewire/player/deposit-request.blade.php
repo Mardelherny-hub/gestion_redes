@@ -123,6 +123,33 @@
                         @enderror
                     </div> --}}
 
+                    <!-- Requisitos del Comprobante -->
+                    <div class="bg-yellow-500/10 border-l-4 border-yellow-500 p-4 mb-4 rounded">
+                        <div class="flex gap-2">
+                            <svg class="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div>
+                                <p class="text-sm font-semibold text-yellow-200 mb-2">⚠️ El comprobante debe incluir claramente:</p>
+                                <ul class="text-sm text-yellow-100 space-y-1 ml-4">
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-yellow-400">•</span>
+                                        <span><strong>Fecha y hora</strong> de la transferencia</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-yellow-400">•</span>
+                                        <span><strong>Monto exacto</strong> transferido</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-yellow-400">•</span>
+                                        <span><strong>Nombre del destinatario</strong> (titular de la cuenta)</span>
+                                    </li>
+                                </ul>
+                                <p class="text-xs text-yellow-200 mt-2 italic">Estos datos son necesarios para verificar y aprobar tu carga rápidamente.</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Upload Comprobante -->
                     <div>
                         <label class="block text-sm font-medium text-gray-300 mb-2">
@@ -159,7 +186,7 @@
                                 </label>
                             @endif
 
-                            <div wire:loading wire:target="receipt" class="text-sm text-blue-400 mt-2 flex items-center gap-2">
+                            <div wire:loading wire:target="receipt" class="text-sm text-blue-400 mt-2 flex items-center gap-2" style="display: none;" x-show="false" x-cloak>
                                 <svg class="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -193,7 +220,7 @@
                             class="flex-1 px-4 py-3 font-semibold text-white rounded-lg transition disabled:opacity-50"
                             style="background-color: {{ $tenant->primary_color }}">
                             <span wire:loading.remove wire:target="submit">Enviar Solicitud</span>
-                            <span wire:loading wire:target="submit" class="flex items-center justify-center gap-2">
+                            <span wire:loading wire:target="submit" class="flex items-center justify-center gap-2" style="display: none;">
                                 <svg class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>

@@ -110,7 +110,49 @@
                     @endif
                 </div>
 
+                
+
             </div>
+            {{-- NUEVA FILA 2: Botones de gestión de cuenta del casino --}}
+<div class="flex flex-col sm:flex-row gap-4 mt-4">
+    {{-- Botón Desbloquear Usuario --}}
+    <button 
+        wire:click="requestUnblock"
+        wire:loading.attr="disabled"
+        wire:target="requestUnblock"
+        class="px-6 py-4 bg-orange-600 rounded-xl font-bold text-white text-lg hover:bg-orange-700 transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+        <div wire:loading.remove wire:target="requestUnblock" class="flex items-center gap-3">
+            <span>🔓 Desbloquear Usuario</span>
+        </div>
+        <div wire:loading wire:target="requestUnblock" class="hidden flex items-center gap-3">
+            <svg class="animate-spin w-6 h-6" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Solicitando...</span>
+        </div>
+    </button>
+
+    {{-- Botón Cambiar Contraseña Casino --}}
+    <button 
+        wire:click="requestPasswordChange"
+        wire:loading.attr="disabled"
+        wire:target="requestPasswordChange"
+        class="px-6 py-4 bg-purple-600 rounded-xl font-bold text-white text-lg hover:bg-purple-700 transition-all shadow-lg flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+        <div wire:loading.remove wire:target="requestPasswordChange" class="flex items-center gap-3">
+            <span>🔑 Cambiar Contraseña</span>
+        </div>
+        <div wire:loading wire:target="requestPasswordChange" class="hidden flex items-center gap-3">
+            <svg class="animate-spin w-6 h-6" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span>Solicitando...</span>
+        </div>
+    </button>
+</div>
         </div>
     </div>
 
