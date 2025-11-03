@@ -55,10 +55,8 @@ class Login extends Component
             }
         } else {
             // Es username -> Solo intentar como Player
-            $player = Player::where('username', $this->credential)
-                ->when($this->tenant, function($q) {
-                    $q->where('tenant_id', $this->tenant->id);
-                })
+            $player = Player::where('tenant_id', $this->tenant->id)
+                ->whereRaw('LOWER(username) = ?', [strtolower($this->credential)])
                 ->first();
             
             if ($player) {

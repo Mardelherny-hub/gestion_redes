@@ -118,13 +118,20 @@ class Register extends Component
     public function register()
     {
         $this->validate([
-            'name' => 'required|min:3|regex:/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/',
-            'username' => [  // NUEVO - reemplaza email
+            'username' => [
                 'required',
                 'min:4',
                 'max:15',
                 'regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
-                Rule::unique('players')->where('tenant_id', $this->tenant->id)
+                function ($attribute, $value, $fail) {
+                    $exists = Player::where('tenant_id', $this->tenant->id)
+                        ->whereRaw('LOWER(username) = ?', [strtolower($value)])
+                        ->exists();
+                    
+                    if ($exists) {
+                        $fail('Este nombre de usuario ya está registrado.');
+                    }
+                }
             ],
             'phone' => [
                 'required',

@@ -26,6 +26,8 @@ class Player extends Authenticatable
         'last_activity_at',
     ];
 
+    
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -37,12 +39,25 @@ class Player extends Authenticatable
         'password' => 'hashed',
     ];
 
-    // Auto-generar código de referido
+    // Auto-generar código de referido y normalizar username
     protected static function booted()
     {
         static::creating(function (Player $player) {
+            // Auto-generar código de referido
             if (!$player->referral_code) {
                 $player->referral_code = strtoupper(Str::random(8));
+            }
+            
+            // Normalizar username a minúsculas
+            if ($player->username) {
+                $player->username = strtolower($player->username);
+            }
+        });
+        
+        static::updating(function (Player $player) {
+            // Normalizar username si cambió
+            if ($player->isDirty('username')) {
+                $player->username = strtolower($player->username);
             }
         });
     }

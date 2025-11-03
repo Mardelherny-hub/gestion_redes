@@ -28,14 +28,22 @@ class PlayerProfile extends Component
     {
         $this->validate([
             'name' => 'required|min:3|max:255',
-            'username' => [  // AGREGADO
+            'username' => [
                 'required',
-                'min:10',
+                'min:4',
                 'max:15',
                 'regex:/^[a-zA-Z][a-zA-Z0-9]*$/',
-                Rule::unique('players', 'username')
-                    ->where('tenant_id', $player->tenant_id)
-                    ->ignore($player->id)
+                function ($attribute, $value, $fail) {
+                    $player = auth()->guard('player')->user();
+                    $exists = Player::where('tenant_id', $player->tenant_id)
+                        ->where('id', '!=', $player->id)
+                        ->whereRaw('LOWER(username) = ?', [strtolower($value)])
+                        ->exists();
+                    
+                    if ($exists) {
+                        $fail('Este nombre de usuario ya está registrado.');
+                    }
+                }
             ],
             'email' => 'required|email|max:255|unique:players,email,' . auth()->guard('player')->id(),
             'phone' => 'required|min:10|max:20',
