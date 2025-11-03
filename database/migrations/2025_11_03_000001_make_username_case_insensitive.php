@@ -9,15 +9,27 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // 1. Normalizar usernames existentes a minúsculas
+        // 1. Identificar y resolver duplicados antes de normalizar
+        DB::statement("
+            UPDATE players p1
+            SET username = username || '_' || id
+            WHERE EXISTS (
+                SELECT 1 FROM players p2
+                WHERE p2.tenant_id = p1.tenant_id
+                AND LOWER(p2.username) = LOWER(p1.username)
+                AND p2.id < p1.id
+            )
+        ");
+        
+        // 2. Ahora normalizar a minúsculas (ya sin duplicados)
         DB::statement("UPDATE players SET username = LOWER(username)");
         
-        // 2. Eliminar índice único anterior
+        // 3. Eliminar índice único anterior
         Schema::table('players', function (Blueprint $table) {
             $table->dropUnique('players_tenant_username_unique');
         });
         
-        // 3. Crear índice único case-insensitive usando expresión
+        // 4. Crear índice único case-insensitive
         DB::statement('CREATE UNIQUE INDEX players_tenant_username_unique ON players (tenant_id, LOWER(username))');
     }
 
