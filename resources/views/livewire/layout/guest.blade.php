@@ -9,6 +9,8 @@
             $currentTenant = request()->attributes->get('current_tenant');
         @endphp
 
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+
         <title>{{ $currentTenant?->name ?? config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
