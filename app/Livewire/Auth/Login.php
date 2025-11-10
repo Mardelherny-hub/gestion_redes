@@ -158,27 +158,27 @@ class Login extends Component
 
         if (!$currentTenant) {
             throw ValidationException::withMessages([
-                'credential' =>'No se pudo identificar el cliente.',
+                'email' =>'No se pudo identificar el cliente.',
             ]);
         }
 
         if (!$player || $player->tenant_id !== $currentTenant->id) {
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
-                'credential' =>__('Las credenciales no coinciden con nuestros registros.'),
+                'email' =>__('Las credenciales no coinciden con nuestros registros.'),
             ]);
         }
 
         // Verificar estado de la cuenta
         if ($player->status === 'suspended') {
             throw ValidationException::withMessages([
-                'credential' =>__('Tu cuenta está suspendida. Contacta a soporte.'),
+                'email' =>__('Tu cuenta está suspendida. Contacta a soporte.'),
             ]);
         }
 
         if ($player->status === 'blocked') {
             throw ValidationException::withMessages([
-                'credential' =>__('Tu cuenta está bloqueada. Contacta a soporte.'),
+                'email' =>__('Tu cuenta está bloqueada. Contacta a soporte.'),
             ]);
         }
 
@@ -186,7 +186,7 @@ class Login extends Component
         if (!Hash::check($this->password, $player->password)) {
             RateLimiter::hit($this->throttleKey());
             throw ValidationException::withMessages([
-                'credential' =>__('Las credenciales no coinciden con nuestros registros.'),
+                'email' =>__('Las credenciales no coinciden con nuestros registros.'),
             ]);
         }
 
@@ -222,7 +222,7 @@ class Login extends Component
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'credential' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
