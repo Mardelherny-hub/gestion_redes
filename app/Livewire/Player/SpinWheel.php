@@ -76,7 +76,8 @@ class SpinWheel extends Component
 
     public function getPrizes()
     {
-        return $this->wheelService->getPrizeConfiguration();
+        $player = auth()->guard('player')->user();
+        return $this->wheelService->getPrizeConfiguration($player->tenant_id);
     }
 
     public function getSpinHistory()

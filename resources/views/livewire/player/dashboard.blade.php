@@ -15,6 +15,10 @@
     
     <!-- BOTÓN CASINO DESTACADO -->
     @if($tenant->casino_url)
+        <div class="text-center mb-2">
+            <span class="text-sm text-gray-400">Tu usuario:</span>
+            <span class="text-white font-bold">{{ $player->username }}</span>
+        </div>
         <button 
             wire:click="$dispatch('openCasinoModal')"                            
             class="w-full mb-4 px-6 py-3.5 rounded-xl font-semibold text-white text-sm flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-lg"
@@ -23,7 +27,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
             </svg>
-            Link al casino ¡CLICK AQUÍ!
+            Ir al Casino
         </button>
     @endif
 

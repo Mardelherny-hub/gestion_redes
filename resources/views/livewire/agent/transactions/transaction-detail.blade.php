@@ -107,16 +107,8 @@
                             </h4>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-400">Nombre</p>
-                                    <p class="font-semibold text-gray-900 dark:text-white">{{ $player->name }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-400">Email</p>
-                                    <p class="font-semibold text-gray-900 dark:text-white">{{ $player->email ?? 'No especificado' }}</p>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-gray-600 dark:text-gray-400">Teléfono</p>
-                                    <p class="font-semibold text-gray-900 dark:text-white">{{ $player->phone }}</p>
+                                    <p class="text-xs text-gray-600 dark:text-gray-400">Username</p>
+                                    <p class="font-semibold text-gray-900 dark:text-white">{{ $player->username }}</p>
                                 </div>
                                 <div>
                                     <p class="text-xs text-gray-600 dark:text-gray-400">Saldo Actual</p>

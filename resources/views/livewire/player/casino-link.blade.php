@@ -50,10 +50,10 @@
                                 <div>
                                     <p class="text-sm font-medium text-yellow-200 mb-1">⚠️ Importante</p>
                                     <p class="text-sm text-yellow-300">
-                                        Si es la primera vez que ingresas, tu contraseña es: <span class="font-mono font-bold text-yellow-100">cambiar123</span>
+                                        No olvides cambiar la contraseña predeterminada desde tu perfil una vez dentro.
                                     </p>
                                     <p class="text-xs text-yellow-400 mt-2">
-                                        Te recomendamos cambiarla desde tu perfil una vez dentro.
+                                        Tu seguridad es importante.
                                     </p>
                                 </div>
                             </div>

@@ -161,7 +161,7 @@
                             {{-- Información del jugador --}}
                             <div class="mb-4">
                                 <p class="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                                    {{ $transaction->player->name }}
+                                    {{ $transaction->player->username }}
                                 </p>
                                 <p class="text-sm text-gray-500 dark:text-gray-400">
                                     Saldo actual: ${{ number_format($transaction->player->balance, 2) }}

@@ -50,16 +50,8 @@
                         <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">JUGADOR</h4>
                         <div class="grid grid-cols-2 gap-3 text-sm">
                             <div>
-                                <p class="text-gray-600 dark:text-gray-400">Nombre</p>
-                                <p class="font-semibold text-gray-900 dark:text-white">{{ $transaction->player->name }}</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 dark:text-gray-400">Email</p>
-                                <p class="font-semibold text-gray-900 dark:text-white">{{ $transaction->player->email }}</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 dark:text-gray-400">Teléfono</p>
-                                <p class="font-semibold text-gray-900 dark:text-white">{{ $transaction->player->phone }}</p>
+                                <p class="text-gray-600 dark:text-gray-400">Username</p>
+                                <p class="font-semibold text-gray-900 dark:text-white">{{ $transaction->player->username }}</p>
                             </div>
                             <div>
                                 <p class="text-gray-600 dark:text-gray-400">Saldo Actual</p>

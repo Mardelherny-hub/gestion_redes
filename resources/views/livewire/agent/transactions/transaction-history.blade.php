@@ -59,6 +59,9 @@
                     <option value="all">Todos</option>
                     <option value="deposit">Depósitos</option>
                     <option value="withdrawal">Retiros</option>
+                    <option value="account_creation">Creación de Usuario</option>
+                    <option value="account_unlock">Desbloqueo</option>
+                    <option value="password_reset">Cambio de Contraseña</option>
                 </select>
             </div>
 
@@ -147,7 +150,7 @@
                                 <div class="text-xs text-gray-500 dark:text-gray-400">{{ $transaction->created_at->format('H:i') }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $transaction->player->name }}</div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $transaction->player->username }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($transaction->type === 'deposit')

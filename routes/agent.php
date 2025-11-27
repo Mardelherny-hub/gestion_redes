@@ -38,5 +38,8 @@ Route::middleware(['auth', 'tenant.identify'])->group(function () {
 
         // Settings/Configuración (solo admin)
         Route::view('/settings', 'agent.settings')->name('settings');
+
+        // Configuración de Ruleta (solo admin)
+        Route::view('/wheel-config', 'agent.wheel-config')->name('wheel-config');
     });
 }); 

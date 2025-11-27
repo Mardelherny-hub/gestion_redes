@@ -12,6 +12,9 @@
 
                 {{-- Configuración de Bonos (ya existente) --}}
                 @livewire('agent.bonus-settings')
+
+                {{-- Configuración de Ruleta --}}
+                @livewire('agent.wheel-config-button')
             </div>
         </div>
     </div>

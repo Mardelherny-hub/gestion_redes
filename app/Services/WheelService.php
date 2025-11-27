@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Player;
 use App\Models\WheelSpin;
 use Illuminate\Support\Facades\DB;
+use App\Models\WheelConfig;
 
 class WheelService
 {
@@ -22,26 +23,51 @@ class WheelService
      */
     public function canSpinToday(Player $player): bool
     {
+        $config = $this->getWheelConfig($player->tenant_id);
+        
+        // Verificar si la ruleta está activa
+        if (!$config['is_active']) {
+            return false;
+        }
+        
         $todaySpins = WheelSpin::where('player_id', $player->id)
             ->whereDate('created_at', today())
             ->count();
         
-        return $todaySpins === 0;
+        return $todaySpins < $config['daily_limit'];
     }
 
     /**
-     * Obtener configuración de premios (hardcoded por ahora, TODO: hacer configurable)
+     * Obtener configuración de premios del tenant
      */
-    public function getPrizeConfiguration(): array
+    public function getPrizeConfiguration(?int $tenantId = null): array
     {
+        $config = $this->getWheelConfig($tenantId);
+        return $config['segments'];
+    }
+
+    /**
+     * Obtener configuración de la ruleta para un tenant
+     */
+    public function getWheelConfig(?int $tenantId = null): array
+    {
+        if ($tenantId) {
+            $config = WheelConfig::where('tenant_id', $tenantId)->first();
+            
+            if ($config) {
+                return [
+                    'is_active' => $config->is_active,
+                    'daily_limit' => $config->daily_limit,
+                    'segments' => $config->segments,
+                ];
+            }
+        }
+        
+        // Fallback: configuración por defecto
         return [
-            ['type' => 'cash', 'amount' => 50, 'probability' => 10, 'label' => '$50'],
-            ['type' => 'cash', 'amount' => 100, 'probability' => 5, 'label' => '$100'],
-            ['type' => 'cash', 'amount' => 500, 'probability' => 2, 'label' => '$500'],
-            ['type' => 'bonus', 'amount' => 100, 'probability' => 15, 'label' => '+$100 Bono'],
-            ['type' => 'bonus', 'amount' => 200, 'probability' => 8, 'label' => '+$200 Bono'],
-            ['type' => 'free_spin', 'amount' => 0, 'probability' => 10, 'label' => 'Giro Extra'],
-            ['type' => 'nothing', 'amount' => 0, 'probability' => 50, 'label' => 'Sigue Intentando'],
+            'is_active' => true,
+            'daily_limit' => 1,
+            'segments' => WheelConfig::getDefaultSegments(),
         ];
     }
 
@@ -56,7 +82,7 @@ class WheelService
 
         return DB::transaction(function () use ($player) {
             // Seleccionar premio basado en probabilidades
-            $prize = $this->selectPrize();
+            $prize = $this->selectPrize($player->tenant_id);
             
             // Crear registro del giro
             $spin = WheelSpin::create([
@@ -80,9 +106,9 @@ class WheelService
     /**
      * Seleccionar premio basado en probabilidades
      */
-    protected function selectPrize(): array
+    protected function selectPrize(?int $tenantId = null): array
     {
-        $prizes = $this->getPrizeConfiguration();
+        $prizes = $this->getPrizeConfiguration($tenantId);
         $totalProbability = array_sum(array_column($prizes, 'probability'));
         $random = rand(1, $totalProbability);
         
