@@ -7,10 +7,12 @@ use App\Services\TransactionService;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Livewire\Traits\WithToast;
+use App\Livewire\Traits\WithTenantContext;
 
 class TransactionRejection extends Component
 {
     use WithToast;
+    use WithTenantContext;
 
     public $showModal = false;
     public $transaction = null;

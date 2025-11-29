@@ -6,10 +6,12 @@ use App\Models\Player;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Livewire\Traits\WithToast;
+use App\Livewire\Traits\WithTenantContext;
 
 class PlayerActions extends Component
 {
     use WithToast;
+    use WithTenantContext;
 
     public $showSuspendModal = false;
     public $showBlockModal = false;

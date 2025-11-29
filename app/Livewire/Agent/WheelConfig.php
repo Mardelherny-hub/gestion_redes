@@ -5,9 +5,12 @@ namespace App\Livewire\Agent;
 use App\Models\WheelConfig as WheelConfigModel;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class WheelConfig extends Component
 {
+    use WithTenantContext;
+    
     public bool $is_active = true;
     public int $daily_limit = 1;
     public array $segments = [];

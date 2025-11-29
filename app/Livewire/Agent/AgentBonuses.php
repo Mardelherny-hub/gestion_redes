@@ -5,9 +5,12 @@ namespace App\Livewire\Agent;
 use App\Models\Player;
 use App\Services\BonusService;
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class AgentBonuses extends Component
 {
+    use WithTenantContext;
+    
     public $showGrantModal = false;
     public $selectedPlayerId = null;
     public $bonusAmount = '';

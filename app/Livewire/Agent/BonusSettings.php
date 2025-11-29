@@ -3,9 +3,11 @@
 namespace App\Livewire\Agent;
 
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class BonusSettings extends Component
 {
+    use WithTenantContext;
     public $showModal = false;
     
     // Bono de bienvenida

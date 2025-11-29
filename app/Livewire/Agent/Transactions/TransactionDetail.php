@@ -5,9 +5,12 @@ namespace App\Livewire\Agent\Transactions;
 use App\Models\Transaction;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use App\Livewire\Traits\WithTenantContext;
 
 class TransactionDetail extends Component
 {
+    use WithTenantContext;
+    
     public $showModal = false;
     public $transaction = null;
     public $player = null;

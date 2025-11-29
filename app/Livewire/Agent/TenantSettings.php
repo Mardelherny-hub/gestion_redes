@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Livewire\Traits\WithTenantContext;
 
 class TenantSettings extends Component
 {
     use WithFileUploads;
+    use WithTenantContext;
 
     /** ========= Ajustes generales ========= */
     public string $whatsapp_number = '';

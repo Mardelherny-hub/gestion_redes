@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Livewire\Traits\WithToast;
+use App\Livewire\Traits\WithTenantContext;
 
 class ApproveTransaction extends Component
 {
     use WithToast;
+    use WithTenantContext;
 
     public $transaction;
     public $isOpen = false;

@@ -5,9 +5,12 @@ namespace App\Livewire\Agent;
 use App\Models\Player;
 use App\Models\Transaction;
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class Dashboard extends Component
 {
+    use WithTenantContext;
+
     public $totalPlayers;
     public $activePlayers;
     public $totalBalance;

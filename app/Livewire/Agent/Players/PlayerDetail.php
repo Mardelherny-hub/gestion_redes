@@ -7,11 +7,13 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use Illuminate\Support\Facades\DB;
 use App\Livewire\Traits\WithToast;
+use App\Livewire\Traits\WithTenantContext;
 
 class PlayerDetail extends Component
 {
 
     use WithToast;
+    use WithTenantContext;
 
     public $showModal = false;
     public $player = null;

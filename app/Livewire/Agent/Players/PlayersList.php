@@ -5,10 +5,12 @@ namespace App\Livewire\Agent\Players;
 use App\Models\Player;
 use Livewire\Component;
 use Livewire\WithPagination;
+use App\Livewire\Traits\WithTenantContext;
 
 class PlayersList extends Component
 {
     use WithPagination;
+    use WithTenantContext;
 
     public $search = '';
     public $statusFilter = 'all';

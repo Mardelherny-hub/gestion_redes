@@ -6,10 +6,12 @@ use App\Models\Transaction;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Livewire\Traits\WithToast;
+use App\Livewire\Traits\WithTenantContext;
 
 class RejectTransaction extends Component
 {
     use WithToast;
+    use WithTenantContext;
 
     public $transaction;
     public $isOpen = false;

@@ -6,10 +6,13 @@ use Livewire\Component;
 use App\Models\BankAccount;
 use App\Livewire\Traits\WithToast;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Emit;
+use App\Livewire\Traits\WithTenantContext;
 
 class ManageBankAccounts extends Component
 {
     use WithToast;
+    use WithTenantContext;
 
     public $showModal = false;
     public $editMode = false;

@@ -3,9 +3,12 @@
 namespace App\Livewire\Agent;
 
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class ContactSettings extends Component
 {
+    use WithTenantContext;
+    
     public $showModal = false;
     
     public $whatsapp_number = '';

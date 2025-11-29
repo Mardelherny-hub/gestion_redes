@@ -6,9 +6,12 @@ use App\Models\Player;
 use App\Models\PlayerMessage;
 use App\Services\MessageService;
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class AgentPlayerMessages extends Component
 {
+    use WithTenantContext;
+    
     public $selectedPlayerId = null;
     public $newMessage = '';
     public $search = '';

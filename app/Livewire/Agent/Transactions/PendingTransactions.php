@@ -5,9 +5,12 @@ namespace App\Livewire\Agent\Transactions;
 use App\Models\Transaction;
 use Livewire\Component;
 use Carbon\Carbon;
+use App\Livewire\Traits\WithTenantContext;
 
 class PendingTransactions extends Component
 {
+    use WithTenantContext;
+    
     public $pendingCount = 0;
     
     // Para actualización automática cada 30 segundos

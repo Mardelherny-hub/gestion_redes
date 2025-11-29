@@ -4,9 +4,11 @@ namespace App\Livewire\Agent\Transactions;
 
 use App\Models\Transaction;
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class NewTransactionMonitor extends Component
 {
+    use App\Livewire\Traits\WithTenantContext;
     public $lastTransactionId = 0;
 
     public function mount()

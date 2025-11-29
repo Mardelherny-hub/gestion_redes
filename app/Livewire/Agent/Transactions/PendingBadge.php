@@ -4,9 +4,12 @@ namespace App\Livewire\Agent\Transactions;
 
 use App\Models\Transaction;
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class PendingBadge extends Component
 {
+    use WithTenantContext;
+    
     public $count = 0;
 
     protected $listeners = [

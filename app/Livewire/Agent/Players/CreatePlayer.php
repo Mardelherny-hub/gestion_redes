@@ -8,11 +8,13 @@ use Livewire\Attributes\On;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use App\Livewire\Traits\WithToast;
+use App\Livewire\Traits\WithTenantContext;
 
 class CreatePlayer extends Component
 {
 
     use WithToast;
+    use WithTenantContext;
 
     public $showModal = false;
     public $name = '';

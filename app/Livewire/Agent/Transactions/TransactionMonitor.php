@@ -5,9 +5,12 @@ namespace App\Livewire\Agent\Transactions;
 use App\Models\Transaction;
 use Livewire\Component;
 use Carbon\Carbon;
+use App\Livewire\Traits\WithTenantContext;
 
 class TransactionMonitor extends Component
 {
+    use WithTenantContext;
+    
     public $pendingCount = 0;
     public $lastUpdate;
     

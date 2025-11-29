@@ -6,10 +6,12 @@ use App\Models\Transaction;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
+use App\Livewire\Traits\WithTenantContext;
 
 class TransactionHistory extends Component
 {
     use WithPagination;
+    use WithTenantContext;
 
     // Búsqueda
     public $search = '';

@@ -5,9 +5,12 @@ namespace App\Livewire\Agent;
 use App\Models\Transaction;
 use App\Models\Player;
 use Livewire\Component;
+use App\Livewire\Traits\WithTenantContext;
 
 class ActivityPanel extends Component
 {
+    use WithTenantContext;
+    
     public $activities = [];
     public $isOpen = false;
     public $unreadCount = 0;
