@@ -136,7 +136,11 @@
                                         @elseif($activity['transaction_type'] === 'account_unlock')
                                             Ya puedes acceder a tu cuenta
                                         @elseif($activity['transaction_type'] === 'password_reset')
-                                            Tu nueva contraseña es: bet123
+                                            @if(!empty($activity['notes']) && str_contains($activity['notes'], 'Nueva contraseña:'))
+                                                {{ $activity['notes'] }}
+                                            @else
+                                                Revisa tus mensajes para ver tu nueva contraseña
+                                            @endif
                                         @endif
                                     </p>
                                 @else
