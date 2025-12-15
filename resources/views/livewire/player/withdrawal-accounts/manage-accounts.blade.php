@@ -26,13 +26,41 @@
                             {{-- Ícono según tipo --}}
                             <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
                                 @if($account->account_type === 'alias')
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                                    </svg>
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                                            <span class="font-medium">Alias:</span> {{ $account->alias }}
+                                        </p>
+                                        <button type="button"
+                                                x-data="{ copied: false }"
+                                                @click="navigator.clipboard.writeText('{{ $account->alias }}'); copied = true; setTimeout(() => copied = false, 2000)"
+                                                class="text-gray-400 hover:text-blue-500 transition"
+                                                :title="copied ? '¡Copiado!' : 'Copiar'">
+                                            <svg x-show="!copied" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                            </svg>
+                                            <svg x-show="copied" x-cloak class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 @else
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
-                                    </svg>
+                                    <div class="flex items-center gap-2">
+                                        <p class="text-sm text-gray-700 dark:text-gray-300">
+                                            <span class="font-medium">Cuenta:</span> {{ $account->account_number }}
+                                        </p>
+                                        <button type="button"
+                                                x-data="{ copied: false }"
+                                                @click="navigator.clipboard.writeText('{{ $account->account_number }}'); copied = true; setTimeout(() => copied = false, 2000)"
+                                                class="text-gray-400 hover:text-blue-500 transition"
+                                                :title="copied ? '¡Copiado!' : 'Copiar'">
+                                            <svg x-show="!copied" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                            </svg>
+                                            <svg x-show="copied" x-cloak class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                        </button>
+                                    </div>
                                 @endif
                             </div>
 

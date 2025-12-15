@@ -50,14 +50,14 @@
                                         type="number" 
                                         wire:model="amount"
                                         class="w-full pl-8 pr-3 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-green-500 focus:border-transparent @error('amount') border-red-500 @enderror"
-                                        placeholder="500"
+                                        placeholder="{{ $tenant->min_withdrawal ?? 500 }}"
                                         step="0.01"
                                     >
                                 </div>
                                 @error('amount')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
-                                <p class="mt-1 text-xs text-gray-400">Mínimo: $500 | Tu saldo: ${{ number_format($player->balance, 2) }}</p>
+                                    <p class="mt-1 text-xs text-gray-400">Mínimo: ${{ number_format($tenant->min_withdrawal ?? 500, 0, ',', '.') }} | Tu saldo: ${{ number_format($player->balance, 2) }}</p>
                             </div>
 
                             <!-- Selector de Cuenta -->

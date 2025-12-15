@@ -64,8 +64,10 @@ class WithdrawalRequest extends Component
 
     protected function rules()
     {
+        $minWithdrawal = $this->tenant->min_withdrawal ?? 500;
+        
         $rules = [
-            'amount' => ['required', 'numeric', 'min:500'],
+            'amount' => ['required', 'numeric', "min:{$minWithdrawal}"],
         ];
 
         if ($this->savedAccounts->isNotEmpty()) {
@@ -75,11 +77,16 @@ class WithdrawalRequest extends Component
         return $rules;
     }
 
-    protected $messages = [
-        'amount.required' => 'El monto es obligatorio',
-        'amount.min' => 'El monto mínimo de retiro es $500',
-        'selectedAccountId.required' => 'Selecciona una cuenta',
-    ];
+    protected function messages()
+    {
+        $minWithdrawal = $this->tenant->min_withdrawal ?? 500;
+        
+        return [
+            'amount.required' => 'El monto es obligatorio',
+            'amount.min' => "El monto mínimo de retiro es $" . number_format($minWithdrawal, 0, ',', '.'),
+            'selectedAccountId.required' => 'Selecciona una cuenta',
+        ];
+    }
 
     public function submit()
     {

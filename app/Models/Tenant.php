@@ -31,7 +31,8 @@ class Tenant extends Model
         'welcome_bonus_enabled',
         'welcome_bonus_amount',
         'referral_bonus_enabled',
-        'referral_bonus_amount',        
+        'referral_bonus_amount',     
+        'min_withdrawal',
         'referral_bonus_enabled' => 'boolean',
         'referral_bonus_amount' => 'decimal:2',
     ];
@@ -42,6 +43,7 @@ class Tenant extends Model
         'is_active' => 'boolean',
         'welcome_bonus_enabled' => 'boolean',
         'welcome_bonus_amount' => 'decimal:2',
+        'min_withdrawal' => 'decimal:2',
     ];
 
     // Relaciones

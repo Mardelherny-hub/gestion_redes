@@ -146,8 +146,23 @@
                             {{-- Notas si existen --}}
                             @if($transaction->notes)
                                 <div class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 dark:bg-opacity-20 rounded">
-                                    <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Notas</p>
-                                    <p class="text-sm text-gray-900 dark:text-white">{{ $transaction->notes }}</p>
+                                    <div class="flex items-center justify-between mb-1">
+                                        <p class="text-xs text-gray-600 dark:text-gray-400">Notas</p>
+                                        <button type="button"
+                                                x-data="{ copied: false }"
+                                                @click="navigator.clipboard.writeText(`{{ str_replace(["\r\n", "\r", "\n"], '\n', addslashes($transaction->notes)) }}`); copied = true; setTimeout(() => copied = false, 2000)"
+                                                class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 flex items-center gap-1"
+                                                :class="copied ? 'text-green-600 dark:text-green-400' : ''">
+                                            <svg x-show="!copied" class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                                            </svg>
+                                            <svg x-show="copied" x-cloak class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                            </svg>
+                                            <span x-text="copied ? '¡Copiado!' : 'Copiar'"></span>
+                                        </button>
+                                    </div>
+                                    <p class="text-sm text-gray-900 dark:text-white whitespace-pre-line">{{ $transaction->notes }}</p>
                                 </div>
                             @endif
                         </div>

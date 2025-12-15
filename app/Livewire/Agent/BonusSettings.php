@@ -18,6 +18,9 @@ class BonusSettings extends Component
     public $referral_bonus_enabled = false;
     public $referral_bonus_amount = 0;
 
+    // Configuración de retiros
+    public $min_withdrawal = 500;
+
     public function mount()
     {
         $this->loadSettings();
@@ -32,6 +35,7 @@ class BonusSettings extends Component
             $this->welcome_bonus_amount = (float) $tenant->welcome_bonus_amount;
             $this->referral_bonus_enabled = (bool) $tenant->referral_bonus_enabled;
             $this->referral_bonus_amount = (float) $tenant->referral_bonus_amount;
+            $this->min_withdrawal = (float) ($tenant->min_withdrawal ?? 500);
         }
         
         // Debug
@@ -67,6 +71,7 @@ class BonusSettings extends Component
         $this->validate([
             'welcome_bonus_amount' => 'nullable|numeric|min:0|max:999999',
             'referral_bonus_amount' => 'nullable|numeric|min:0|max:999999',
+            'min_withdrawal' => 'required|numeric|min:0|max:999999',
         ], [
             'welcome_bonus_amount.numeric' => 'El monto debe ser un número',
             'welcome_bonus_amount.min' => 'El monto no puede ser negativo',
@@ -74,6 +79,8 @@ class BonusSettings extends Component
             'referral_bonus_amount.numeric' => 'El monto debe ser un número',
             'referral_bonus_amount.min' => 'El monto no puede ser negativo',
             'referral_bonus_amount.max' => 'El monto máximo es $999,999',
+            'min_withdrawal.required' => 'El monto mínimo es obligatorio',
+            'min_withdrawal.min' => 'El monto no puede ser negativo',
         ]);
 
         $tenant = auth()->user()->tenant;
@@ -83,6 +90,7 @@ class BonusSettings extends Component
             'welcome_bonus_amount' => $this->welcome_bonus_amount ?? 0,
             'referral_bonus_enabled' => $this->referral_bonus_enabled,
             'referral_bonus_amount' => $this->referral_bonus_amount ?? 0,
+            'min_withdrawal' => $this->min_withdrawal ?? 500,
         ]);
 
         // Activity log
