@@ -38,10 +38,10 @@
                         <div class="flex justify-between items-start mb-2">
                             <div class="flex items-center gap-3">
                                 <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold">
-                                    {{ substr($player->name, 0, 1) }}
+                                    {{ substr($player->username, 0, 1) }}
                                 </div>
                                 <div>
-                                    <h3 class="font-medium text-gray-900 dark:text-white text-sm">{{ $player->name }}</h3>
+                                    <h3 class="font-medium text-gray-900 dark:text-white text-sm">{{ $player->username }}</h3>
                                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ $player->phone }}</p>
                                 </div>
                             </div>
@@ -82,10 +82,10 @@
                 <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
                     <div class="flex items-center gap-3">
                         <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-lg">
-                            {{ substr($selectedPlayer->name, 0, 1) }}
+                            {{ substr($selectedPlayer->username, 0, 1) }}
                         </div>
                         <div>
-                            <h2 class="font-semibold text-gray-900 dark:text-white">{{ $selectedPlayer->name }}</h2>
+                            <h2 class="font-semibold text-gray-900 dark:text-white">{{ $selectedPlayer->username }}</h2>
                             <p class="text-sm text-gray-500 dark:text-gray-400">{{ $selectedPlayer->phone }}</p>
                         </div>
                     </div>
@@ -122,7 +122,7 @@
                                 <div class="px-3 py-2 rounded-lg bg-white dark:bg-gray-800 shadow border border-gray-200 dark:border-gray-700">
                                     <p class="text-sm text-gray-900 dark:text-white">{!! nl2br(e($msg->message)) !!}</p>
                                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        {{ $selectedPlayer->name }} • {{ $msg->created_at->format('d/m H:i') }}
+                                        {{ $selectedPlayer->username }} • {{ $msg->created_at->format('d/m H:i') }}
                                     </p>
                                 </div>
                                 
