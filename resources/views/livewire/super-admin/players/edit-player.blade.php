@@ -169,10 +169,10 @@
                                         <p class="text-xs text-gray-600">Código de Referido</p>
                                         <p class="text-sm font-semibold text-gray-900">{{ $player->referral_code }}</p>
                                     </div>
-                                    <div>
+                                    {{-- <div>
                                         <p class="text-xs text-gray-600">Saldo Actual</p>
                                         <p class="text-sm font-semibold text-gray-900">${{ number_format($player->balance, 2) }}</p>
-                                    </div>
+                                    </div> --}}
                                     <div>
                                         <p class="text-xs text-gray-600">Fecha de Registro</p>
                                         <p class="text-sm text-gray-900">{{ $player->created_at->format('d/m/Y') }}</p>

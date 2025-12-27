@@ -44,10 +44,10 @@
                                     <p class="text-xs text-gray-600 dark:text-gray-400">Username</p>
                                     <p class="font-semibold text-gray-900 dark:text-white">{{ $player->username }}</p>
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <p class="text-xs text-gray-600 dark:text-gray-400">Saldo Actual</p>
                                     <p class="text-xl font-bold text-green-600 dark:text-green-400">${{ number_format($player->balance, 2) }}</p>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
 

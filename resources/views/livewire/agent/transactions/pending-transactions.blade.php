@@ -110,7 +110,7 @@
                                     </svg>
                                     <span class="font-medium">{{ $transaction->player->username }}</span>
                                     <span class="text-gray-400">|</span>
-                                    <span>Saldo: ${{ number_format($transaction->player->balance, 2) }}</span>
+                                    {{-- <span>Saldo: ${{ number_format($transaction->player->balance, 2) }}</span> --}}
                                 </div>
 
                                 {{-- Tiempo de espera --}}

@@ -37,10 +37,10 @@
                         {{-- KPIs Grid --}}
                         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                             {{-- Saldo --}}
-                            <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
+                            {{-- <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
                                 <p class="text-xs text-gray-500 dark:text-gray-400 uppercase mb-1">Saldo Actual</p>
                                 <p class="text-2xl font-bold text-green-600 dark:text-green-400">${{ number_format($player->balance, 2) }}</p>
-                            </div>
+                            </div> --}}
 
                             {{-- Total Depósitos --}}
                             <div class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700">
@@ -149,9 +149,9 @@
                                                         {{ $referral->status === 'blocked' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}">
                                                         {{ ucfirst($referral->status) }}
                                                     </span>
-                                                    <p class="text-xs text-gray-600 dark:text-gray-400">
+                                                    {{-- <p class="text-xs text-gray-600 dark:text-gray-400">
                                                         Saldo: ${{ number_format($referral->balance, 2) }}
-                                                    </p>
+                                                    </p> --}}
                                                 </div>
                                             </div>
                                         @endforeach

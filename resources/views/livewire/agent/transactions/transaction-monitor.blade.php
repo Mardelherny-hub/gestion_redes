@@ -163,9 +163,9 @@
                                 <p class="text-2xl font-bold text-gray-900 dark:text-white mb-1">
                                     {{ $transaction->player->username }}
                                 </p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{-- <p class="text-sm text-gray-500 dark:text-gray-400">
                                     Saldo actual: ${{ number_format($transaction->player->balance, 2) }}
-                                </p>
+                                </p> --}}
                             </div>
 
                             {{-- Monto (solo para deposit/withdrawal) --}}

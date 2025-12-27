@@ -49,10 +49,10 @@
                                     <p class="text-xs text-gray-600 dark:text-gray-400">Teléfono</p>
                                     <p class="font-semibold text-gray-900 dark:text-white">{{ $player->phone }}</p>
                                 </div>
-                                <div>
+                                {{-- <div>
                                     <p class="text-xs text-gray-600 dark:text-gray-400">Saldo Actual</p>
                                     <p class="text-xl font-bold text-green-600 dark:text-green-400">${{ number_format($player->balance, 2) }}</p>
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="mt-3">
                                 <a href="#" wire:click.prevent="$dispatch('openPlayerDetail', { playerId: {{ $player->id }} })" 
@@ -245,20 +245,20 @@
                             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                 <h4 class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-3">CÁLCULO DEL RETIRO</h4>
                                 <div class="space-y-2">
-                                    <div class="flex justify-between">
+                                    {{-- <div class="flex justify-between">
                                         <span class="text-gray-700 dark:text-gray-300">Saldo actual:</span>
                                         <span class="font-semibold text-gray-900 dark:text-white">${{ number_format($currentBalance, 2) }}</span>
-                                    </div>
+                                    </div> --}}
                                     <div class="flex justify-between">
                                         <span class="text-gray-700 dark:text-gray-300">Monto a retirar:</span>
                                         <span class="font-semibold text-red-600 dark:text-red-400">-${{ number_format($transaction->amount, 2) }}</span>
                                     </div>
-                                    <div class="border-t border-gray-300 dark:border-gray-600 pt-2 flex justify-between">
+                                    {{-- <div class="border-t border-gray-300 dark:border-gray-600 pt-2 flex justify-between">
                                         <span class="font-bold text-gray-900 dark:text-white">Nuevo saldo:</span>
                                         <span class="font-bold text-xl {{ $hasSufficientBalance ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
                                             ${{ number_format($newBalance, 2) }}
                                         </span>
-                                    </div>
+                                    </div> --}}
 
                                     @if(!$hasSufficientBalance)
                                         <div class="mt-3 p-3 bg-yellow-100 dark:bg-yellow-900 dark:bg-opacity-20 rounded flex items-start">

@@ -82,7 +82,7 @@
                 <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Jugador</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Contacto</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Saldo</th>
+                    {{-- <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Saldo</th> --}}
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Bonos Recibidos</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Total Bonos</th>
                     <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase">Acciones</th>
@@ -105,11 +105,11 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {{ $player->phone }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
+                    {{-- <td class="px-6 py-4 whitespace-nowrap">
                         <span class="text-sm font-semibold text-gray-900 dark:text-white">
                             ${{ number_format($player->balance, 2) }}
                         </span>
-                    </td>
+                    </td> --}}
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
                         {{ $player->bonuses_count }}
                     </td>
@@ -152,9 +152,9 @@
                     <p class="text-sm text-blue-900 dark:text-blue-100">
                         <span class="font-semibold">Jugador:</span> {{ $player->name }}
                     </p>
-                    <p class="text-sm text-blue-900 dark:text-blue-100">
+                    {{-- <p class="text-sm text-blue-900 dark:text-blue-100">
                         <span class="font-semibold">Saldo actual:</span> ${{ number_format($player->balance, 2) }}
-                    </p>
+                    </p> --}}
                 </div>
                 
                 <form wire:submit.prevent="grantBonus">

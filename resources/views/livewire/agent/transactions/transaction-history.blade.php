@@ -27,12 +27,12 @@
             <p class="text-sm text-gray-600 dark:text-gray-400">Total Retiros</p>
             <p class="text-2xl font-bold text-red-600 dark:text-red-400">${{ number_format($totalWithdrawals, 2) }}</p>
         </div>
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        {{-- <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
             <p class="text-sm text-gray-600 dark:text-gray-400">Balance Neto</p>
             <p class="text-2xl font-bold {{ $netBalance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400' }}">
                 ${{ number_format($netBalance, 2) }}
             </p>
-        </div>
+        </div> --}}
     </div>
 
     {{-- Búsqueda y Filtros --}}

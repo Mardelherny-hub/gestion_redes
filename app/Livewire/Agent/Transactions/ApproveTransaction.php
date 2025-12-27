@@ -71,13 +71,13 @@ class ApproveTransaction extends Component
 
             if ($this->transaction->type === 'deposit') {
                 // Incrementar saldo
-                $player->increment('balance', $this->transaction->amount);
+                /* $player->increment('balance', $this->transaction->amount); */
             } elseif ($this->transaction->type === 'withdrawal') {
                 // Decrementar saldo (verificar que tenga suficiente)
-                if ($player->balance < $this->transaction->amount) {
+                /* if ($player->balance < $this->transaction->amount) {
                     $this->showToast('El jugador no tiene saldo suficiente', 'error');
                     return;
-                }
+                } */
                 $player->decrement('balance', $this->transaction->amount);
             }
 

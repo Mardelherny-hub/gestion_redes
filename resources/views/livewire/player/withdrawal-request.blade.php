@@ -57,7 +57,7 @@
                                 @error('amount')
                                     <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                                 @enderror
-                                    <p class="mt-1 text-xs text-gray-400">Mínimo: ${{ number_format($tenant->min_withdrawal ?? 500, 0, ',', '.') }} | Tu saldo: ${{ number_format($player->balance, 2) }}</p>
+                                    <p class="mt-1 text-xs text-gray-400">Mínimo: ${{ number_format($tenant->min_withdrawal ?? 500, 0, ',', '.') }} {{-- | Tu saldo: ${{ number_format($player->balance, 2) }} --}}</p>
                             </div>
 
                             <!-- Selector de Cuenta -->

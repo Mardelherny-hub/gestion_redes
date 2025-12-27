@@ -140,14 +140,14 @@ class TransactionApproval extends Component
                     $transactionService = app(\App\Services\TransactionService::class);
                     
                     if ($this->transaction->type === 'deposit') {
-                        $this->player->increment('balance', $this->transaction->amount);
-                        $this->transaction->update(['balance_after' => $this->player->fresh()->balance]);
+                        /* $this->player->increment('balance', $this->transaction->amount);
+                        $this->transaction->update(['balance_after' => $this->player->fresh()->balance]); */
                     } elseif ($this->transaction->type === 'withdrawal') {
-                        if ($this->player->balance < $this->transaction->amount) {
+                        /* if ($this->player->balance < $this->transaction->amount) {
                             throw new \Exception('Saldo insuficiente');
                         }
                         $this->player->decrement('balance', $this->transaction->amount);
-                        $this->transaction->update(['balance_after' => $this->player->fresh()->balance]);
+                        $this->transaction->update(['balance_after' => $this->player->fresh()->balance]); */
                     }
                 }
                 
