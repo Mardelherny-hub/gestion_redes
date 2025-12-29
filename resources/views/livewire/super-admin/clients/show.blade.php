@@ -193,7 +193,7 @@
                                             <div class="flex items-center">
                                                 <div>
                                                     <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $player->name }}</div>
-                                                    <div class="text-xs text-gray-500 dark:text-gray-400">@{{ $player->username }}</div>
+                                                    <div class="text-xs text-gray-500 dark:text-gray-400">{{ $player->username }}</div>
                                                     @if($player->referrals_count > 0)
                                                         <div class="text-xs text-blue-600">
                                                             👥 {{ $player->referrals_count }} referido{{ $player->referrals_count > 1 ? 's' : '' }}
