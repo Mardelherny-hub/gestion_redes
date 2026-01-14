@@ -133,10 +133,73 @@
 
                         @if($transaction->notes)
                             <div class="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 dark:bg-opacity-20 rounded">
-                                <p class="text-xs text-gray-600 dark:text-gray-400 mb-1">Datos adicionales</p>
-                                <p class="text-sm text-gray-900 dark:text-white">{{ $transaction->notes }}</p>
+                                <p class="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Datos de la operación</p>
+                                
+                                @if($transaction->type === 'withdrawal')
+                                    @php
+                                        $notesData = [];
+                                        $notes = $transaction->notes;
+                                        if (preg_match('/Tipo:\s*(\w+)/i', $notes, $m)) $notesData['tipo'] = $m[1];
+                                        if (preg_match('/Cuenta:\s*([^\s]+)/i', $notes, $m)) $notesData['cuenta'] = $m[1];
+                                        if (preg_match('/Alias:\s*([^\s]+)/i', $notes, $m)) $notesData['alias'] = $m[1];
+                                        if (preg_match('/Titular:\s*(.+?)(?=\s+(?:DNI|Banco|Cuenta ID|Método|Tipo|Alias):|$)/i', $notes, $m)) $notesData['titular'] = trim($m[1]);
+                                        if (preg_match('/DNI:\s*(\d+)/i', $notes, $m)) $notesData['dni'] = $m[1];
+                                        if (preg_match('/Banco:\s*([a-zA-Z\s]+?)(?=\s+[A-Z][a-z]+:|$)/i', $notes, $m)) $notesData['banco'] = trim($m[1]);
+                                    @endphp
+                                    
+                                    <div class="space-y-2">
+                                        @if(isset($notesData['cuenta']) || isset($notesData['alias']))
+                                            <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-600">
+                                                <div>
+                                                    <span class="text-xs text-gray-500">{{ $notesData['tipo'] ?? 'Cuenta' }}</span>
+                                                    <p class="font-mono font-semibold text-gray-900 dark:text-white">{{ $notesData['cuenta'] ?? $notesData['alias'] ?? '-' }}</p>
+                                                </div>
+                                                <button type="button"
+                                                        onclick="copyToClipboard(this)"
+                                                        data-value="{{ $notesData['cuenta'] ?? $notesData['alias'] ?? '' }}"
+                                                        class="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 rounded">
+                                                    <span>Copiar</span>
+                                                </button>
+                                            </div>
+                                        @endif
+                                        
+                                        @if(isset($notesData['titular']))
+                                            <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-600">
+                                                <div>
+                                                    <span class="text-xs text-gray-500">Titular</span>
+                                                    <p class="font-semibold text-gray-900 dark:text-white">{{ $notesData['titular'] }}</p>
+                                                </div>
+                                                <button type="button"
+                                                        onclick="copyToClipboard(this)"
+                                                        data-value="{{ $notesData['titular'] ?? '' }}"
+                                                        class="px-3 py-1 text-xs bg-blue-100 hover:bg-blue-200 dark:bg-blue-900 dark:hover:bg-blue-800 text-blue-700 dark:text-blue-300 rounded">
+                                                    <span>Copiar</span>
+                                                </button>
+                                            </div>
+                                        @endif
+                                        
+                                        <div class="grid grid-cols-2 gap-2 text-sm">
+                                            @if(isset($notesData['dni']))
+                                                <div>
+                                                    <span class="text-xs text-gray-500">DNI</span>
+                                                    <p class="text-gray-900 dark:text-white">{{ $notesData['dni'] }}</p>
+                                                </div>
+                                            @endif
+                                            @if(isset($notesData['banco']))
+                                                <div>
+                                                    <span class="text-xs text-gray-500">Banco</span>
+                                                    <p class="text-gray-900 dark:text-white">{{ $notesData['banco'] }}</p>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @else
+                                    <p class="text-sm text-gray-900 dark:text-white">{{ $transaction->notes }}</p>
+                                @endif
                             </div>
                         @endif
+
+
                         {{-- Credenciales para solicitudes de cuenta --}}
                             @if(in_array($transaction->type, ['account_creation', 'password_reset']))
                                 <div class="bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 rounded-lg p-4 border-2 border-blue-200 dark:border-blue-800">
@@ -274,4 +337,20 @@
             </div>
         </div>
     @endif
+
+    <script>
+    function copyToClipboard(btn) {
+        var text = btn.dataset.value;
+        var textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        btn.querySelector('span').innerText = '¡Copiado!';
+        setTimeout(function() {
+            btn.querySelector('span').innerText = 'Copiar';
+        }, 2000);
+    }
+    </script>
 </div>

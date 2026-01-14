@@ -1,7 +1,8 @@
 <div class="p-6">
     <!-- Header -->
-    <div class="mb-6">
-        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mensajes de Jugadores</h1>
+    <div class="mb-6 flex justify-between items-start">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Mensajes de Jugadores</h1>
         <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
             Gestiona la comunicación con tus jugadores
             @if($totalUnreadCount > 0)
@@ -10,6 +11,8 @@
                 </span>
             @endif
         </p>
+        </div>
+        @livewire('agent.broadcast-message')
     </div>
 
     <!-- Grid: Lista de jugadores + Conversación -->

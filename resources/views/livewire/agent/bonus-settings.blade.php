@@ -158,8 +158,32 @@
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                             <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                💡 Ambos jugadores (quien refiere y quien es referido) recibirán este monto
+                                💡 El monto se otorgará según la opción seleccionada abajo
                             </p>
+                        </div>
+
+                        <!-- Selector de Destinatario -->
+                        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                ¿Quién recibe el bono?
+                            </label>
+                            <div class="space-y-2">
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" wire:model="referral_bonus_target" value="referrer"
+                                        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                    <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Solo quien refiere</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" wire:model="referral_bonus_target" value="referred"
+                                        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                    <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Solo el referido</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input type="radio" wire:model="referral_bonus_target" value="both"
+                                        class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                    <span class="ml-3 text-sm text-gray-700 dark:text-gray-300">Ambos</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
 

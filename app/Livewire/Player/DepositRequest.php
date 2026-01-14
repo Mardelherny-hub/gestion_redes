@@ -50,6 +50,12 @@ class DepositRequest extends Component
             return;
         }
         
+        // Verificar modo mantenimiento
+        if ($this->tenant->maintenance_mode && $this->tenant->maintenance_block_operations) {
+            $this->showToast('Las operaciones están temporalmente suspendidas por mantenimiento.', 'error');
+            return;
+        }
+
         $this->isOpen = true;
     }
 

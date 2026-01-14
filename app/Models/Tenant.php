@@ -35,6 +35,10 @@ class Tenant extends Model
         'min_withdrawal',
         'referral_bonus_enabled' => 'boolean',
         'referral_bonus_amount' => 'decimal:2',
+        'referral_bonus_target',
+        'maintenance_mode',
+        'maintenance_message',
+        'maintenance_block_operations',
     ];
 
     protected $casts = [
@@ -44,6 +48,9 @@ class Tenant extends Model
         'welcome_bonus_enabled' => 'boolean',
         'welcome_bonus_amount' => 'decimal:2',
         'min_withdrawal' => 'decimal:2',
+        'referral_bonus_target' => 'string',
+        'maintenance_mode' => 'boolean',
+        'maintenance_block_operations' => 'boolean',
     ];
 
     // Relaciones

@@ -309,4 +309,38 @@ class MessageService
             $transaction
         );
     }
+
+    /**
+     * Enviar mensaje masivo a todos los jugadores activos del tenant
+     */
+    public function broadcastMessage(int $tenantId, User $sender, string $message): int
+    {
+        $players = Player::where('tenant_id', $tenantId)
+            ->where('status', 'active')
+            ->get();
+
+        $count = 0;
+        foreach ($players as $player) {
+            PlayerMessage::create([
+                'tenant_id' => $tenantId,
+                'player_id' => $player->id,
+                'sender_type' => 'agent',
+                'sender_id' => $sender->id,
+                'message' => $message,
+                'category' => 'general',
+            ]);
+            $count++;
+        }
+
+        // Activity log
+        activity()
+            ->causedBy($sender)
+            ->withProperties([
+                'recipients' => $count,
+                'message' => \Str::limit($message, 100)
+            ])
+            ->log('Mensaje masivo enviado');
+
+        return $count;
+    }
 }

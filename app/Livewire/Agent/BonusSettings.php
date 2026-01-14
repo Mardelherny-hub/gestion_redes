@@ -17,6 +17,7 @@ class BonusSettings extends Component
     // Bono de referido
     public $referral_bonus_enabled = false;
     public $referral_bonus_amount = 0;
+    public $referral_bonus_target = 'both';
 
     // Configuración de retiros
     public $min_withdrawal = 500;
@@ -35,6 +36,7 @@ class BonusSettings extends Component
             $this->welcome_bonus_amount = (float) $tenant->welcome_bonus_amount;
             $this->referral_bonus_enabled = (bool) $tenant->referral_bonus_enabled;
             $this->referral_bonus_amount = (float) $tenant->referral_bonus_amount;
+            $this->referral_bonus_target = $tenant->referral_bonus_target ?? 'both';
             $this->min_withdrawal = (float) ($tenant->min_withdrawal ?? 500);
         }
         
@@ -90,6 +92,7 @@ class BonusSettings extends Component
             'welcome_bonus_amount' => $this->welcome_bonus_amount ?? 0,
             'referral_bonus_enabled' => $this->referral_bonus_enabled,
             'referral_bonus_amount' => $this->referral_bonus_amount ?? 0,
+            'referral_bonus_target' => $this->referral_bonus_target,
             'min_withdrawal' => $this->min_withdrawal ?? 500,
         ]);
 
@@ -102,6 +105,7 @@ class BonusSettings extends Component
                 'welcome_bonus_amount' => $this->welcome_bonus_amount,
                 'referral_bonus_enabled' => $this->referral_bonus_enabled,
                 'referral_bonus_amount' => $this->referral_bonus_amount,
+                'referral_bonus_target' => $this->referral_bonus_target,
             ])
             ->log('Configuración de bonos actualizada');
 

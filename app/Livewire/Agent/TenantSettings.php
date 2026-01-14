@@ -22,6 +22,9 @@ class TenantSettings extends Component
     /** ========= Ajustes generales ========= */
     public string $whatsapp_number = '';
     public string $casino_url = '';
+    public bool $maintenance_mode = false;
+    public ?string $maintenance_message = null;
+    public bool $maintenance_block_operations = false;
 
     /** ========= Marca blanca ========= */
     public ?string $brand_primary = null;
@@ -58,6 +61,9 @@ class TenantSettings extends Component
         // generales
         $this->whatsapp_number = $tenant->whatsapp_number ?? '';
         $this->casino_url      = $tenant->casino_url ?? '';
+        $this->maintenance_mode = (bool) $tenant->maintenance_mode;
+        $this->maintenance_message = $tenant->maintenance_message;
+        $this->maintenance_block_operations = (bool) $tenant->maintenance_block_operations;
 
         // branding
         $this->brand_primary    = $tenant->brand_primary ?? '#4f46e5';
@@ -121,6 +127,9 @@ class TenantSettings extends Component
         DB::transaction(function () use ($tenant) {
             $tenant->whatsapp_number = $this->whatsapp_number;
             $tenant->casino_url      = $this->casino_url;
+            $tenant->maintenance_mode = $this->maintenance_mode;
+            $tenant->maintenance_message = $this->maintenance_message;
+            $tenant->maintenance_block_operations = $this->maintenance_block_operations;
             $tenant->save();
 
             if (function_exists('activity')) {
@@ -128,6 +137,8 @@ class TenantSettings extends Component
                     ->withProperties([
                         'whatsapp_number' => $this->whatsapp_number,
                         'casino_url'      => $this->casino_url,
+                        'maintenance_mode' => $this->maintenance_mode,
+                        'maintenance_block_operations' => $this->maintenance_block_operations,
                     ])->log('Configuración general del tenant actualizada');
             }
         });

@@ -39,19 +39,25 @@ class PlayerObserver
             $referrer = Player::find($player->referred_by);
             
             if ($referrer && $referrer->isActive()) {
+                $target = $tenant->referral_bonus_target ?? 'both';
+                
                 // Otorgar bono al REFERIDOR (quien compartió el código)
-                $this->bonusService->grantReferralBonus(
-                    $referrer, 
-                    $tenant->referral_bonus_amount,
-                    $player->name
-                );
+                if (in_array($target, ['referrer', 'both'])) {
+                    $this->bonusService->grantReferralBonus(
+                        $referrer, 
+                        $tenant->referral_bonus_amount,
+                        $player->name
+                    );
+                }
                 
                 // Otorgar bono al REFERIDO (quien usó el código)
-                $this->bonusService->grantReferralBonus(
-                    $player,
-                    $tenant->referral_bonus_amount,
-                    $referrer->name
-                );
+                if (in_array($target, ['referred', 'both'])) {
+                    $this->bonusService->grantReferralBonus(
+                        $player,
+                        $tenant->referral_bonus_amount,
+                        $referrer->name
+                    );
+                }
             }
         }
     }
