@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <link rel="manifest" href="/manifest.json">
+
         <title>{{ $currentTenant->name }} - Panel de Gestión</title>
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -288,6 +291,30 @@
 
         <!-- Toast Notifications -->
         <x-toast-notifications />
+
+        <!-- Push Notifications -->
+        <script>
+            window.pushRoutes = {
+                subscribe: '{{ route("push.subscribe") }}',
+                unsubscribe: '{{ route("push.unsubscribe") }}',
+                vapidKey: '{{ route("push.vapid") }}'
+            };
+        </script>
+        <script src="/js/push-notifications.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', async function() {
+                if (await PushNotifications.init()) {
+                    const isSubscribed = await PushNotifications.isSubscribed();
+                    if (!isSubscribed && Notification.permission === 'default') {
+                        setTimeout(() => {
+                            if (confirm('¿Deseas recibir notificaciones de nuevas transacciones?')) {
+                                PushNotifications.subscribe();
+                            }
+                        }, 5000);
+                    }
+                }
+            });
+        </script>
 
         {{-- Panel de Actividad en Tiempo Real --}}
         @livewire('agent.activity-panel')

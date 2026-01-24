@@ -5,6 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        <link rel="manifest" href="/manifest.json">
+
         <title>{{ config('app.name', 'Casino') }} - {{ auth()->guard('player')->user()->username }}</title>
 
         <!-- Fonts -->
@@ -372,6 +374,31 @@
 
         <!-- Toast Notifications -->
         <x-toast-notifications />
+
+        <!-- Push Notifications -->
+        <script>
+            window.pushRoutes = {
+                subscribe: '{{ route("player.push.subscribe") }}',
+                unsubscribe: '{{ route("player.push.unsubscribe") }}',
+                vapidKey: '{{ route("player.push.vapid") }}'
+            };
+        </script>
+        <script src="/js/push-notifications.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', async function() {
+                if (await PushNotifications.init()) {
+                    const isSubscribed = await PushNotifications.isSubscribed();
+                    if (!isSubscribed && Notification.permission === 'default') {
+                        // Mostrar prompt después de 5 segundos
+                        setTimeout(() => {
+                            if (confirm('¿Deseas recibir notificaciones de tus transacciones?')) {
+                                PushNotifications.subscribe();
+                            }
+                        }, 5000);
+                    }
+                }
+            });
+        </script>
 
         {{-- Panel de Actividad en Tiempo Real --}}
         @livewire('player.activity-panel')
