@@ -378,6 +378,9 @@
         <!-- Toast Notifications -->
         <x-toast-notifications />
 
+        <!-- PWA Prompt -->
+        <x-pwa-prompt />
+
         <!-- Push Notifications -->
         <script>
             window.pushRoutes = {
