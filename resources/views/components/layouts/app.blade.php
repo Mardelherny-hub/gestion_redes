@@ -177,6 +177,10 @@
                                                 Perfil
                                             </a>
                                         @endif
+
+                                        <!-- Notificaciones e Instalar App -->
+                                        <x-push-notification-button />
+                                        
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
                                             <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">

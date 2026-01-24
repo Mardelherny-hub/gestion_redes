@@ -153,6 +153,9 @@
                                             <span>Mi Perfil</span>
                                         </a>
 
+                                        <!-- Notificaciones e Instalar App -->
+                                        <x-push-notification-button />
+
                                         <!-- Cerrar Sesión -->
                                         <form method="POST" action="{{ route('player.logout') }}" class="border-t border-gray-700 mt-2 pt-2">
                                             @csrf
