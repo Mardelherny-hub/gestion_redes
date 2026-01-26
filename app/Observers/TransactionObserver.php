@@ -93,8 +93,8 @@ class TransactionObserver
             if ($transaction->status === 'completed') {
                 $this->messageService->notifyDepositApproved($transaction);
                 
-                // Verificar si es primer depósito para bono de referido
-                $this->checkReferralBonus($transaction);
+                // Verificar si es primer depósito para bonos
+                $this->checkFirstDepositBonuses($transaction);
             }
 
             if ($transaction->status === 'rejected') {
@@ -198,11 +198,12 @@ class TransactionObserver
     }
 
     /**
-     * Verificar y otorgar bono por referido en primer depósito
+     * Verificar y otorgar bonos en primer depósito (bienvenida + referido)
      */
-    protected function checkReferralBonus(Transaction $transaction): void
+    protected function checkFirstDepositBonuses(Transaction $transaction): void
     {
         $player = $transaction->player;
+        $tenant = $player->tenant;
         
         // Verificar si es el primer depósito completado
         $isFirstDeposit = Transaction::where('player_id', $player->id)
@@ -210,7 +211,52 @@ class TransactionObserver
             ->where('status', 'completed')
             ->count() === 1;
         
-        if (!$isFirstDeposit || !$player->referred_by) {
+        if (!$isFirstDeposit) {
+            return;
+        }
+        
+        // 1. Bono de bienvenida por porcentaje (si está habilitado)
+        if ($tenant->welcome_bonus_enabled && $tenant->welcome_bonus_is_percentage && $tenant->welcome_bonus_amount > 0) {
+            $this->grantWelcomeBonusPercentage($player, $transaction, $tenant);
+        }
+        
+        // 2. Bono por referido
+        $this->checkReferralBonus($player, $tenant);
+    }
+
+    /**
+     * Otorgar bono de bienvenida por porcentaje del primer depósito
+     */
+    protected function grantWelcomeBonusPercentage(Player $player, Transaction $transaction, $tenant): void
+    {
+        // Calcular el bono como porcentaje del depósito
+        $percentage = $tenant->welcome_bonus_amount; // Ej: 20 = 20%
+        $bonusAmount = ($transaction->amount * $percentage) / 100;
+        
+        // Aplicar tope máximo si existe
+        if ($tenant->welcome_bonus_max && $bonusAmount > $tenant->welcome_bonus_max) {
+            $bonusAmount = $tenant->welcome_bonus_max;
+        }
+        
+        // Otorgar el bono
+        $this->bonusService->grantWelcomeBonus($player, $bonusAmount);
+        
+        activity()
+            ->performedOn($player)
+            ->withProperties([
+                'deposit_amount' => $transaction->amount,
+                'percentage' => $percentage,
+                'bonus_amount' => $bonusAmount,
+            ])
+            ->log('Bono de bienvenida por porcentaje otorgado');
+    }
+
+    /**
+     * Verificar y otorgar bono por referido
+     */
+    protected function checkReferralBonus(Player $player, $tenant): void
+    {
+        if (!$player->referred_by) {
             return;
         }
         
@@ -221,21 +267,30 @@ class TransactionObserver
             return;
         }
         
-        // Configuración del bono (TODO: hacer configurable por tenant)
-        $referralBonusAmount = 200; // $200 para cada uno
+        // Verificar si el bono de referido está habilitado
+        if (!$tenant->referral_bonus_enabled || $tenant->referral_bonus_amount <= 0) {
+            return;
+        }
+        
+        $referralBonusAmount = $tenant->referral_bonus_amount;
+        $target = $tenant->referral_bonus_target ?? 'both';
         
         // Otorgar bono al referidor
-        $this->bonusService->grantReferralBonus(
-            $referrer,
-            $referralBonusAmount,
-            $player->name
-        );
+        if (in_array($target, ['referrer', 'both'])) {
+            $this->bonusService->grantReferralBonus(
+                $referrer,
+                $referralBonusAmount,
+                $player->display_name
+            );
+        }
         
         // Otorgar bono al referido
-        $this->bonusService->grantReferralBonus(
-            $player,
-            $referralBonusAmount,
-            "tu primer depósito"
-        );
+        if (in_array($target, ['referred', 'both'])) {
+            $this->bonusService->grantReferralBonus(
+                $player,
+                $referralBonusAmount,
+                "tu primer depósito"
+            );
+        }
     }
 }

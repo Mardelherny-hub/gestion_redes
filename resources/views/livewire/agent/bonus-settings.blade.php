@@ -81,10 +81,62 @@
                             </label>
                         </div>
 
-                        <!-- Input Monto -->
-                        <div>
+                        <!-- Tipo de Bono -->
+                        <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Monto del Bono
+                                Tipo de Bono
+                            </label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center cursor-pointer">
+                                    <input 
+                                        type="radio" 
+                                        wire:model.live="welcome_bonus_is_percentage" 
+                                        value="0"
+                                        class="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+                                    >
+                                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Monto Fijo</span>
+                                </label>
+                                <label class="flex items-center cursor-pointer">
+                                    <input 
+                                        type="radio" 
+                                        wire:model.live="welcome_bonus_is_percentage" 
+                                        value="1"
+                                        class="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
+                                    >
+                                    <span class="ml-2 text-sm text-gray-700 dark:text-gray-300">Porcentaje del 1er Depósito</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Input Monto/Porcentaje -->
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                {{ $welcome_bonus_is_percentage ? 'Porcentaje del Bono' : 'Monto del Bono' }}
+                            </label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400 text-lg">
+                                    {{ $welcome_bonus_is_percentage ? '%' : '$' }}
+                                </span>
+                                <input 
+                                    type="number" 
+                                    wire:model="welcome_bonus_amount"
+                                    step="{{ $welcome_bonus_is_percentage ? '1' : '0.01' }}"
+                                    min="0"
+                                    max="{{ $welcome_bonus_is_percentage ? '100' : '999999' }}"
+                                    class="pl-8 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
+                                    placeholder="{{ $welcome_bonus_is_percentage ? '20' : '0.00' }}"
+                                >
+                            </div>
+                            @error('welcome_bonus_amount')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Tope Máximo (solo si es porcentaje) -->
+                        @if($welcome_bonus_is_percentage)
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Tope Máximo (opcional)
                             </label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400 text-lg">
@@ -92,20 +144,22 @@
                                 </span>
                                 <input 
                                     type="number" 
-                                    wire:model="welcome_bonus_amount"
+                                    wire:model="welcome_bonus_max"
                                     step="0.01"
                                     min="0"
                                     class="pl-8 block w-full rounded-lg border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-green-500 focus:ring focus:ring-green-200 focus:ring-opacity-50"
-                                    placeholder="0.00"
+                                    placeholder="1000.00"
                                 >
                             </div>
-                            @error('welcome_bonus_amount')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                            @enderror
-                            <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                💡 El checkbox activa o desactiva el bono automático para nuevos registros
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                Si el bono calculado supera este monto, se otorgará el tope máximo
                             </p>
                         </div>
+                        @endif
+
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            💡 {{ $welcome_bonus_is_percentage ? 'El bono se calculará sobre el primer depósito del jugador' : 'El bono se otorga al momento del registro' }}
+                        </p>
                     </div>
 
                     <!-- Bono de Referido -->

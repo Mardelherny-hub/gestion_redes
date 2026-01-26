@@ -26,10 +26,19 @@ class WebPushService
 
     public function sendToSubscription(PushSubscription $subscription, string $title, string $body, string $url = '/'): bool
     {
+        // Obtener nombre del tenant para el título
+        $tenantName = $subscription->tenant?->name ?? 'Next Level';
+
+        // Obtener nombre e ícono del tenant
+        $tenantName = $subscription->tenant?->name ?? 'Next Level';
+        $tenantIcon = $subscription->tenant?->logo_url ?? '/favicon-32x32.png';
+
         $payload = json_encode([
-            'title' => $title,
+            'title' => $tenantName . ' - ' . $title,
             'body' => $body,
             'url' => $url,
+            'icon' => $tenantIcon,
+            'badge' => '/favicon-32x32.png',
             'tag' => 'notification-' . time(),
         ]);
 

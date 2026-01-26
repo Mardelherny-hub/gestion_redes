@@ -54,4 +54,10 @@ Route::prefix('player')
         Route::post('/push/subscribe', [App\Http\Controllers\PushSubscriptionController::class, 'subscribe'])->name('push.subscribe');
         Route::post('/push/unsubscribe', [App\Http\Controllers\PushSubscriptionController::class, 'unsubscribe'])->name('push.unsubscribe');
         Route::get('/push/vapid-key', [App\Http\Controllers\PushSubscriptionController::class, 'getVapidPublicKey'])->name('push.vapid');
-    });
+    
+        // Página de descarga (pública)
+        Route::get('/descargar', function () {
+            return view('player.descargar');
+        })->name('player.descargar');
+    
+        });
