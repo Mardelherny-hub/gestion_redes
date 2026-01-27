@@ -53,6 +53,15 @@ class MessageService
             ->causedBy($player)
             ->log('Mensaje enviado por jugador');
 
+        // Push a agentes del tenant
+        $webPush = new \App\Services\WebPushService();
+        $webPush->sendToTenantUsers(
+            $player->tenant,
+            '💬 Nuevo mensaje',
+            $player->display_name . ': ' . \Str::limit($message, 50),
+            '/dashboard/messages'
+        );
+
         return $playerMessage;
     }
 
@@ -80,6 +89,15 @@ class MessageService
             ->performedOn($playerMessage)
             ->causedBy($agent)
             ->log('Mensaje enviado por agente');
+
+        // Push al player
+        $webPush = new \App\Services\WebPushService();
+        $webPush->sendToPlayer(
+            $player,
+            '💬 Nuevo mensaje',
+            \Str::limit($message, 50),
+            '/player/dashboard'
+        );
 
         return $playerMessage;
     }

@@ -38,15 +38,16 @@ class TransactionObserver
 
         if ($transaction->type === 'withdrawal') {
             $this->messageService->notifyWithdrawalRequest($transaction);
-             // Push notification a agentes del tenant
-            if (in_array($transaction->type, ['deposit', 'withdrawal'])) {
-                $this->webPushService->sendToTenantUsers(
-                    $transaction->player->tenant,
-                    '💰 Nueva transacción pendiente',
-                    ucfirst($transaction->type === 'deposit' ? 'Depósito' : 'Retiro') . ' de $' . number_format($transaction->amount, 2) . ' - ' . $transaction->player->name,
-                    '/dashboard/transactions/pending'
-                );
-            }
+        }
+
+        // Push notification a agentes del tenant (depósitos y retiros)
+        if (in_array($transaction->type, ['deposit', 'withdrawal'])) {
+            $this->webPushService->sendToTenantUsers(
+                $transaction->player->tenant,
+                '💰 Nueva transacción pendiente',
+                ucfirst($transaction->type === 'deposit' ? 'Depósito' : 'Retiro') . ' de $' . number_format($transaction->amount, 2) . ' - ' . $transaction->player->name,
+                '/dashboard/transactions/pending'
+            );
         }
 
         // Notificaciones para solicitudes de cuenta
@@ -93,6 +94,14 @@ class TransactionObserver
             if ($transaction->status === 'completed') {
                 $this->messageService->notifyDepositApproved($transaction);
                 
+                // Push al player
+                $this->webPushService->sendToPlayer(
+                    $transaction->player,
+                    '✅ Depósito aprobado',
+                    'Tu depósito de $' . number_format($transaction->amount, 2) . ' fue acreditado',
+                    '/player/transactions'
+                );
+                
                 // Verificar si es primer depósito para bonos
                 $this->checkFirstDepositBonuses($transaction);
             }
@@ -122,6 +131,14 @@ class TransactionObserver
                 
                 if ($transaction->type === 'deposit') {
                     $this->messageService->notifyDepositRejected($transaction, $reason);
+                    
+                    // Push al player
+                    $this->webPushService->sendToPlayer(
+                        $transaction->player,
+                        '❌ Depósito rechazado',
+                        'Tu depósito de $' . number_format($transaction->amount, 2) . ' fue rechazado',
+                        '/player/transactions'
+                    );
                 } elseif ($transaction->type === 'withdrawal') {
                     $this->messageService->notifyWithdrawalRejected($transaction, $reason);
                 }
@@ -133,6 +150,14 @@ class TransactionObserver
         if ($transaction->type === 'withdrawal') {
             if ($transaction->status === 'completed') {
                 $this->messageService->notifyWithdrawalApproved($transaction);
+                
+                // Push al player
+                $this->webPushService->sendToPlayer(
+                    $transaction->player,
+                    '✅ Retiro aprobado',
+                    'Tu retiro de $' . number_format($transaction->amount, 2) . ' fue procesado',
+                    '/player/transactions'
+                );
             }
 
             if ($transaction->status === 'rejected') {
@@ -162,6 +187,14 @@ class TransactionObserver
                     $this->messageService->notifyDepositRejected($transaction, $reason);
                 } elseif ($transaction->type === 'withdrawal') {
                     $this->messageService->notifyWithdrawalRejected($transaction, $reason);
+                    
+                    // Push al player
+                    $this->webPushService->sendToPlayer(
+                        $transaction->player,
+                        '❌ Retiro rechazado',
+                        'Tu retiro de $' . number_format($transaction->amount, 2) . ' fue rechazado',
+                        '/player/transactions'
+                    );
                 }
                 // Para los tipos de cuenta, ya se maneja en TransactionApproval/Rejection
             }
