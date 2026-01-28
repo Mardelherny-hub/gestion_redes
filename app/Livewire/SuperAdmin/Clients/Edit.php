@@ -60,7 +60,7 @@ class Edit extends Component
             'name' => 'required|string|max:255',
             'domain' => 'required|string|max:255|unique:tenants,domain,' . $this->tenant->id,
             'custom_domain' => 'nullable|string|max:255|unique:tenants,custom_domain,' . $this->tenant->id . '|regex:/^[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,}$/i',
-            'database' => 'required|string|max:255',
+            'database' => 'nullable|string|max:255',
             'primary_color' => 'required|string|max:7',
             'secondary_color' => 'required|string|max:7',
             'logo' => 'nullable|image|max:2048',
@@ -94,15 +94,16 @@ class Edit extends Component
             $logoUrl = asset('storage/' . $logoUrl);
         }
         
-        // Detectar si cambió el dominio personalizado
-        $domainChanged = $this->custom_domain && $this->custom_domain !== $this->tenant->custom_domain;
+        // Detectar si cambió el dominio personalizado (ANTES de actualizar)
+        $oldCustomDomain = $this->tenant->custom_domain;
+        $domainChanged = $this->custom_domain && $this->custom_domain !== $oldCustomDomain;
 
         // Actualizar el tenant
         $this->tenant->update([
             'name' => $this->name,
             'domain' => $this->domain,
             'custom_domain' => $this->custom_domain ? strtolower($this->custom_domain) : null,
-            'database' => $this->database,
+            'database' => $this->database ?: $this->tenant->database,
             'primary_color' => $this->primary_color,
             'secondary_color' => $this->secondary_color,
             'logo_url' => $logoUrl,
@@ -113,15 +114,15 @@ class Edit extends Component
             'chip_price' => $this->chip_price,
         ]);
         
-        // Si cambió el dominio, mostrar instrucciones
+        // Si cambió el dominio, mostrar instrucciones (sin redirect)
         if ($domainChanged) {
             $this->showDnsInstructions = true;
             $this->dnsInstructions = $this->generateDnsInstructions($this->tenant);
-            session()->flash('dns_instructions', $this->dnsInstructions);
+            session()->flash('message', "Cliente actualizado. Revisa las instrucciones DNS.");
+            return; // No redirect, mostrar modal
         }
 
         session()->flash('message', "Cliente {$this->tenant->name} actualizado exitosamente.");
-
         return $this->redirect(route('super-admin.clients.index'), navigate: true);
     }
 

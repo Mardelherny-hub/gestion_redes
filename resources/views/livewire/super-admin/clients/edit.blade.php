@@ -100,20 +100,63 @@
                                         ✓ Actualmente usando: <strong>{{ $tenant->custom_domain }}</strong>
                                     </p>
                                 @endif
+                                @if($custom_domain)
+                                <div class="mt-2 text-sm bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded p-3">
+                                    <p class="font-bold text-green-800 dark:text-green-300 mb-2">📋 INSTRUCCIONES DNS PARA: {{ $custom_domain }}</p>
+                                    <p class="text-green-700 dark:text-green-400 mb-2">El cliente debe configurar estos registros DNS:</p>
+                                    <div class="font-mono text-xs space-y-2 text-green-700 dark:text-green-400">
+                                        <div>
+                                            <p class="font-bold">REGISTRO A:</p>
+                                            <p>Tipo: A | Host: @ | Valor: {{ config('app.server_ip', 'XXX.XXX.XXX.XXX') }} | TTL: 3600</p>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold">REGISTRO A (WWW):</p>
+                                            <p>Tipo: A | Host: www | Valor: {{ config('app.server_ip', 'XXX.XXX.XXX.XXX') }} | TTL: 3600</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 pt-2 border-t border-green-300 dark:border-green-700 text-green-600 dark:text-green-500 text-xs">
+                                        <p>• La propagación DNS puede tardar hasta 48 horas</p>
+                                        <p>• Subdominio de respaldo: {{ $domain }}.{{ config('app.domain') }}</p>
+                                    </div>
+                                </div>
+                                @else
+                                @if($custom_domain)
+                                <div class="mt-2 text-sm bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded p-3">
+                                    <p class="font-bold text-green-800 dark:text-green-300 mb-2">📋 INSTRUCCIONES DNS PARA: {{ $custom_domain }}</p>
+                                    <p class="text-green-700 dark:text-green-400 mb-2">El cliente debe configurar estos registros DNS:</p>
+                                    <div class="font-mono text-xs space-y-2 text-green-700 dark:text-green-400">
+                                        <div>
+                                            <p class="font-bold">REGISTRO A:</p>
+                                            <p>Tipo: A | Host: @ | Valor: {{ config('app.server_ip', 'XXX.XXX.XXX.XXX') }} | TTL: 3600</p>
+                                        </div>
+                                        <div>
+                                            <p class="font-bold">REGISTRO A (WWW):</p>
+                                            <p>Tipo: A | Host: www | Valor: {{ config('app.server_ip', 'XXX.XXX.XXX.XXX') }} | TTL: 3600</p>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3 pt-2 border-t border-green-300 dark:border-green-700 text-green-600 dark:text-green-500 text-xs">
+                                        <p>• La propagación DNS puede tardar hasta 48 horas</p>
+                                        <p>• Subdominio de respaldo: {{ $domain }}.{{ config('app.domain') }}</p>
+                                    </div>
+                                </div>
+                                @else
                                 <div class="mt-2 text-sm bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-3">
                                     <p class="font-medium text-blue-800 dark:text-blue-300">ℹ️ Dominio Personalizado:</p>
                                     <ul class="list-disc list-inside mt-2 space-y-1 text-blue-700 dark:text-blue-400">
-                                        <li>Si cambias el dominio, se generarán nuevas instrucciones DNS</li>
+                                        <li>Permite que el cliente use su propio dominio</li>
+                                        <li>El cliente debe configurar sus registros DNS</li>
                                         <li>El subdominio siempre estará disponible como respaldo</li>
                                     </ul>
                                 </div>
+                                @endif
+                                @endif
                                 @error('custom_domain') 
                                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span> 
                                 @enderror
                             </div>
 
                             <!-- Base de Datos -->
-                            <div>
+                            {{-- <div>
                                 <label for="database" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Base de Datos <span class="text-red-500">*</span>
                                 </label>
@@ -124,7 +167,7 @@
                                     class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                                 >
                                 @error('database') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 

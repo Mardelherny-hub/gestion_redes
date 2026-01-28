@@ -339,7 +339,7 @@ class MessageService
 
         $count = 0;
         foreach ($players as $player) {
-            PlayerMessage::create([
+PlayerMessage::create([
                 'tenant_id' => $tenantId,
                 'player_id' => $player->id,
                 'sender_type' => 'agent',
@@ -347,6 +347,16 @@ class MessageService
                 'message' => $message,
                 'category' => 'general',
             ]);
+            
+            // Push al player
+            $webPush = new \App\Services\WebPushService();
+            $webPush->sendToPlayer(
+                $player,
+                '📢 Nuevo mensaje',
+                \Str::limit($message, 50),
+                '/player/dashboard'
+            );
+            
             $count++;
         }
 
