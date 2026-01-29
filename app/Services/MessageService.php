@@ -59,7 +59,7 @@ class MessageService
             $player->tenant,
             '💬 Nuevo mensaje',
             $player->display_name . ': ' . \Str::limit($message, 50),
-            '/dashboard/messages'
+            '/messages'
         );
 
         return $playerMessage;
