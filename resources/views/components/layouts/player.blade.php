@@ -403,6 +403,17 @@
                         }, 5000);
                     }
                 }
+
+                 // Listener para sonido de push en PC
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.addEventListener('message', function(event) {
+                        if (event.data && event.data.type === 'PUSH_RECEIVED') {
+                            const audio = new Audio('/sounds/notification.mp3');
+                            audio.volume = 0.5;
+                            audio.play().catch(err => console.log('No se pudo reproducir sonido:', err));
+                        }
+                    });
+                }
             });
         </script>
 
