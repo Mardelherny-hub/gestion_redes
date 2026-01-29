@@ -311,6 +311,8 @@
         <script>
         document.addEventListener('DOMContentLoaded', async function() {
             if (await PushNotifications.init()) {
+                // Registrar SW siempre
+                await PushNotifications.registerServiceWorker();
                 const isSubscribed = await PushNotifications.isSubscribed();
                 if (!isSubscribed && Notification.permission === 'default') {
                     setTimeout(() => {

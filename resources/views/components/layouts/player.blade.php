@@ -393,6 +393,8 @@
         <script>
             document.addEventListener('DOMContentLoaded', async function() {
                 if (await PushNotifications.init()) {
+                    // Registrar SW siempre
+                    await PushNotifications.registerServiceWorker();
                     const isSubscribed = await PushNotifications.isSubscribed();
                     if (!isSubscribed && Notification.permission === 'default') {
                         // Mostrar prompt después de 5 segundos
