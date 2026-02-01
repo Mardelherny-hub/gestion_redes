@@ -35,7 +35,8 @@ class MessageService
     public function sendPlayerMessage(
         Player $player, 
         string $message, 
-        string $category = 'support'
+        string $category = 'support',
+        ?string $imagePath = null
     ): PlayerMessage {
         $playerMessage = PlayerMessage::create([
             'tenant_id' => $player->tenant_id,
@@ -43,6 +44,7 @@ class MessageService
             'sender_type' => 'player',
             'sender_id' => $player->id,
             'message' => $message,
+            'image_path' => $imagePath,
             'category' => $category,
             'read_by_agent_at' => null, // Forzar que agent lo vea
         ]);
@@ -54,13 +56,17 @@ class MessageService
             ->log('Mensaje enviado por jugador');
 
         // Push a agentes del tenant
-        $webPush = new \App\Services\WebPushService();
-        $webPush->sendToTenantUsers(
-            $player->tenant,
-            '💬 Nuevo mensaje',
-            $player->display_name . ': ' . \Str::limit($message, 50),
-            '/messages'
-        );
+        try {
+            $webPush = new \App\Services\WebPushService();
+            $webPush->sendToTenantUsers(
+                $player->tenant,
+                '💬 Nuevo mensaje de ' . $player->display_name,
+                \Str::limit($message, 50),
+                '/dashboard/messages/' . $player->id
+            );
+        } catch (\Exception $e) {
+            // Silenciar error de push
+        }
 
         return $playerMessage;
     }
@@ -72,7 +78,8 @@ class MessageService
         Player $player, 
         User $agent,
         string $message, 
-        string $category = 'support'
+        string $category = 'support',
+        ?string $imagePath = null
     ): PlayerMessage {
         $playerMessage = PlayerMessage::create([
             'tenant_id' => $player->tenant_id,
@@ -80,6 +87,7 @@ class MessageService
             'sender_type' => 'agent',
             'sender_id' => $agent->id,
             'message' => $message,
+            'image_path' => $imagePath,
             'category' => $category,
             'read_by_player_at' => null, // Forzar que player lo vea
         ]);
@@ -90,14 +98,17 @@ class MessageService
             ->causedBy($agent)
             ->log('Mensaje enviado por agente');
 
-        // Push al player
-        $webPush = new \App\Services\WebPushService();
-        $webPush->sendToPlayer(
-            $player,
-            '💬 Nuevo mensaje',
-            \Str::limit($message, 50),
-            '/player/dashboard'
-        );
+        // Push notification al jugador
+            try {
+                $this->webPushService->sendToPlayer(
+                    $player,
+                    '💬 Nuevo mensaje del operador',
+                    \Str::limit($message, 50),
+                    '/messages'
+                );
+            } catch (\Exception $e) {
+                // Silenciar error de push
+            }
 
         return $playerMessage;
     }
@@ -331,7 +342,7 @@ class MessageService
     /**
      * Enviar mensaje masivo a todos los jugadores activos del tenant
      */
-    public function broadcastMessage(int $tenantId, User $sender, string $message): int
+    public function broadcastMessage(int $tenantId, User $sender, string $message, ?string $imagePath = null): int
     {
         $players = Player::where('tenant_id', $tenantId)
             ->where('status', 'active')
@@ -339,33 +350,37 @@ class MessageService
 
         $count = 0;
         foreach ($players as $player) {
-PlayerMessage::create([
+            PlayerMessage::create([
                 'tenant_id' => $tenantId,
                 'player_id' => $player->id,
                 'sender_type' => 'agent',
                 'sender_id' => $sender->id,
                 'message' => $message,
+                'image_path' => $imagePath,
                 'category' => 'general',
             ]);
             
-            // Push al player
-            $webPush = new \App\Services\WebPushService();
-            $webPush->sendToPlayer(
-                $player,
-                '📢 Nuevo mensaje',
-                \Str::limit($message, 50),
-                '/player/dashboard'
-            );
+            try {
+                $webPush = new \App\Services\WebPushService();
+                $webPush->sendToPlayer(
+                    $player,
+                    '📢 Nuevo mensaje',
+                    \Str::limit($message, 50),
+                    '/player/dashboard'
+                );
+            } catch (\Exception $e) {
+                // Silenciar error de push
+            }
             
             $count++;
         }
 
-        // Activity log
         activity()
             ->causedBy($sender)
             ->withProperties([
                 'recipients' => $count,
-                'message' => \Str::limit($message, 100)
+                'message' => \Str::limit($message, 100),
+                'has_image' => !is_null($imagePath)
             ])
             ->log('Mensaje masivo enviado');
 

@@ -231,7 +231,7 @@
                                         <p class="mb-2 text-sm text-gray-400"><span class="font-semibold">Click para subir</span> o arrastra</p>
                                         <p class="text-xs text-gray-500">PNG, JPG, WEBP (max. 5MB)</p>
                                     </div>
-                                    <input type="file" wire:model="receipt" accept="image/*" class="hidden">
+                                    <input type="file" wire:model="receipt" accept="image/*" capture="environment" class="hidden">
                                 </label>
                             @endif
 
