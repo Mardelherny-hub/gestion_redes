@@ -35,6 +35,7 @@ class Edit extends Component
     public $admin_name = '';
     public $admin_email = '';
     public $admin_password = '';
+    public $addons = [];
 
     public function mount(Tenant $tenant)
     {
@@ -52,6 +53,7 @@ class Edit extends Component
         $this->monthly_fee = $tenant->monthly_fee;
         $this->chips_balance = $tenant->chips_balance;
         $this->chip_price = $tenant->chip_price;
+        $this->addons = $tenant->addons ?? [];
     }
 
     protected function rules()
@@ -82,6 +84,20 @@ class Edit extends Component
         'logo.image' => 'El archivo debe ser una imagen.',
         'logo.max' => 'La imagen no puede pesar más de 2MB.',
     ];
+
+    public function toggleAddon(string $key)
+    {
+        $this->addons[$key] = !($this->addons[$key] ?? false);
+        $this->tenant->update(['addons' => $this->addons]);
+
+        activity()
+            ->performedOn($this->tenant)
+            ->causedBy(auth()->user())
+            ->withProperties(['addon' => $key, 'enabled' => $this->addons[$key]])
+            ->log('Addon ' . ($this->addons[$key] ? 'habilitado' : 'deshabilitado') . ': ' . $key);
+
+        session()->flash('message', 'Addon actualizado correctamente.');
+    }
 
     public function save()
     {

@@ -86,7 +86,7 @@ class EditPlayer extends Component
                     ->where('tenant_id', $tenantId)
                     ->ignore($this->playerId)
             ],
-            'password' => 'nullable|min:8|confirmed',  // NUEVO
+            'password' => 'nullable|min:8|confirmed',
         ], [
             'name.required' => 'El nombre es obligatorio',
             'name.min' => 'El nombre debe tener al menos 3 caracteres',
@@ -99,8 +99,8 @@ class EditPlayer extends Component
             'email.unique' => 'Este email ya está registrado',
             'phone.required' => 'El teléfono es obligatorio',
             'phone.unique' => 'Este teléfono ya está registrado',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres',  // NUEVO
-            'password.confirmed' => 'Las contraseñas no coinciden',  // NUEVO
+            'password.min' => 'La contraseña debe tener al menos 8 caracteres',
+            'password.confirmed' => 'Las contraseñas no coinciden',
         ]);
 
         // Preparar datos para actualizar
@@ -111,15 +111,25 @@ class EditPlayer extends Component
             'phone' => $this->phone,
         ];
 
-        // NUEVO: Solo agregar password si se ingresó
         if (!empty($this->password)) {
             $updateData['password'] = Hash::make($this->password);
         }
 
-        // Actualizar datos
+        // Actualizar jugador
         $this->player->update($updateData);
 
-        // Preparar datos para activity log
+        // API: cambio de contraseña
+        if (!empty($this->password)) {
+            $service = \App\Services\ApiIntegrationService::forTenant($this->player->tenant);
+            $result = $service->updatePassword($this->player, $this->password);
+                if ($result['success']) {
+                    $this->showToast('Contraseña replicada en plataforma externa ✅', 'success');
+                } else {
+                    $this->showToast('Contraseña actualizada solo en ' . $this->player->tenant->name . ' (' . ($result['error'] ?? 'API no soporta esta acción') . ')', 'info');
+                }
+        }
+
+        // Activity log
         $changes = [];
         if ($this->originalData['name'] !== $this->name) {
             $changes['name'] = ['before' => $this->originalData['name'], 'after' => $this->name];
@@ -133,28 +143,21 @@ class EditPlayer extends Component
         if ($this->originalData['phone'] !== $this->phone) {
             $changes['phone'] = ['before' => $this->originalData['phone'], 'after' => $this->phone];
         }
-        
-        // NUEVO: Registrar cambio de contraseña
         if (!empty($this->password)) {
             $changes['password'] = 'Contraseña actualizada';
         }
 
-        // Registrar en activity log solo si hubo cambios
         if (!empty($changes)) {
             activity()
                 ->performedOn($this->player)
                 ->causedBy(auth()->user())
-                ->withProperties([
-                    'changes' => $changes
-                ])
+                ->withProperties(['changes' => $changes])
                 ->log('Información del jugador actualizada');
         }
 
         $this->showToast('Información actualizada correctamente', 'success');
-
         $this->closeModal();
         $this->dispatch('playerUpdated');
-        return redirect()->route('dashboard.players');
     }
 
     public function closeModal()

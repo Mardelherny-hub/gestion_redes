@@ -25,6 +25,7 @@ class Player extends Authenticatable
         'status',
         'casino_linked',
         'last_activity_at',
+        'external_id',
     ];
 
     

@@ -7,6 +7,7 @@ use App\Models\Player;
 use App\Services\MessageService;
 use App\Services\BonusService;
 use App\Services\WebPushService;
+use App\Services\ApiIntegrationService;
 
 class TransactionObserver
 {
@@ -200,6 +201,11 @@ class TransactionObserver
             }
         }
 
+        // Disparar hacia API externa del tenant (si está configurada)
+        if ($transaction->status === 'completed') {
+            $this->fireApiIntegration($transaction);
+        }
+
         // Solicitudes de cuenta (account_creation, account_unlock, password_reset)
         if ($transaction->isAccountRequest()) {
             if ($transaction->status === 'completed') {
@@ -324,6 +330,50 @@ class TransactionObserver
                 $referralBonusAmount,
                 "tu primer depósito"
             );
+        }
+    }
+
+    /**
+     * Disparar acción hacia la API externa del tenant (si está configurada)
+     */
+    protected function fireApiIntegration(Transaction $transaction): void
+    {
+        try {
+            $player = $transaction->player;
+            $tenant = $player->tenant;
+            $service = ApiIntegrationService::forTenant($tenant);
+
+            if (!$service) {
+                return;
+            }
+
+            $notes = $transaction->notes ?? '';
+
+            match ($transaction->type) {
+                'account_creation' => (function () use ($service, $player, $notes) {
+                    $password = null;
+                    if (preg_match('/Contraseña:\s*(\S+)/', $notes, $m)) {
+                        $password = $m[1];
+                    }
+                    $service->createUser($player, $password);
+                })(),
+                'password_reset' => (function () use ($service, $player, $notes) {
+                    $password = '';
+                    if (preg_match('/Nueva contraseña:\s*(\S+)/', $notes, $m)) {
+                        $password = $m[1];
+                    }
+                    $service->updatePassword($player, $password);
+                })(),
+                'account_unlock' => $service->unlockUser($player),
+                'deposit' => $service->deposit($player, (float) $transaction->amount),
+                'withdrawal' => $service->withdraw($player, (float) $transaction->amount),
+                default => null,
+            };
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('API Integration dispatch failed', [
+                'transaction_id' => $transaction->id,
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }

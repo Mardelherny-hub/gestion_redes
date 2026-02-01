@@ -118,6 +118,16 @@
                                             Cuentas
                                     </a>
 
+                                    @if(auth()->user()->tenant?->hasAddon('api_integration'))
+                                        <!-- Integración API -->
+                                        <a href="{{ route('api-integration') }}" wire:navigate
+                                            class="inline-flex items-center px-3 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out
+                                            {{ request()->routeIs('api-integration') ? 'text-gray-900 dark:text-gray-100' : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300' }}"
+                                            style="{{ request()->routeIs('api-integration') ? 'border-color: ' . $currentTenant->primary_color . '; color: ' . $currentTenant->primary_color : 'border-color: transparent' }}">
+                                                API
+                                        </a>
+                                    @endif
+
                                     <!-- Ruleta -->
                                     {{-- <a href="{{ route('wheel-config') }}" wire:navigate
                                     class="inline-flex items-center px-3 pt-1 border-b-2 text-sm font-medium leading-5 transition duration-150 ease-in-out
@@ -247,6 +257,15 @@
                                 style="{{ request()->routeIs('messages') ? 'border-color: ' . $currentTenant->primary_color : '' }}">
                                     Mensajes
                             </a>
+                            @if(auth()->user()->tenant?->hasAddon('api_integration'))
+                                <!-- Integración API -->
+                                <a href="{{ route('api-integration') }}" wire:navigate 
+                                    class="block w-full ps-3 pe-4 py-2 border-l-4 text-base font-medium transition
+                                    {{ request()->routeIs('api-integration') ? 'bg-indigo-50 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-200' : 'border-transparent text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700' }}"
+                                    style="{{ request()->routeIs('api-integration') ? 'border-color: ' . $currentTenant->primary_color : '' }}">
+                                        Integración API
+                                </a>
+                            @endif
                             <!-- Ruleta -->
                             {{-- <a href="{{ route('wheel-config') }}" wire:navigate 
                                 class="block w-full ps-3 pe-4 py-2 border-l-4 text-base font-medium transition

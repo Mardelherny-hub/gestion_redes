@@ -41,6 +41,7 @@ class Tenant extends Model
         'maintenance_mode',
         'maintenance_message',
         'maintenance_block_operations',
+        'addons',
     ];
 
     protected $casts = [
@@ -55,6 +56,7 @@ class Tenant extends Model
         'referral_bonus_target' => 'string',
         'maintenance_mode' => 'boolean',
         'maintenance_block_operations' => 'boolean',
+        'addons' => 'array',
     ];
 
     // Relaciones
@@ -90,6 +92,24 @@ class Tenant extends Model
     }
 
     /**
+     * Verificar si un addon está habilitado
+     */
+    public function hasAddon(string $addon): bool
+    {
+        return (bool) ($this->addons[$addon] ?? false);
+    }
+
+    /**
+     * Habilitar/deshabilitar un addon
+     */
+    public function toggleAddon(string $addon, bool $enabled): void
+    {
+        $addons = $this->addons ?? [];
+        $addons[$addon] = $enabled;
+        $this->update(['addons' => $addons]);
+    }
+
+    /**
      * Obtener la URL activa del tenant
      */
     public function getActiveUrl(): string
@@ -109,6 +129,11 @@ class Tenant extends Model
     public function activeBankAccount()
     {
         return $this->hasOne(BankAccount::class)->where('is_active', true)->where('status', 'active');
+    }
+
+    public function apiIntegration()
+    {
+        return $this->hasOne(AgentApiIntegration::class);
     }
 
     public function getWhatsappLinkAttribute()

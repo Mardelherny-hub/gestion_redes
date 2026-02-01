@@ -90,12 +90,25 @@ class CreatePlayer extends Component
             'username' => $this->username,  // NUEVO
             'email' => $this->email ?: null,
             'phone' => $this->phone,
-            'balance' => $this->initial_balance ?? 0,
+            'balance' => $this->initial_balance ?: 0,
             'referral_code' => $referralCode,
             'status' => 'active',
             'casino_linked' => true,
             'password' => $this->password ? bcrypt($this->password) : null,
         ]);
+
+        // Disparar API de creación si el tenant tiene integración
+        if ($this->password) {
+            $service = \App\Services\ApiIntegrationService::forTenant($player->tenant);
+            if ($service) {
+                $result = $service->createUser($player, $this->password);
+                if ($result['success']) {
+                    $this->showToast('Jugador replicado en plataforma externa ✅', 'success');
+                } else {
+                    $this->showToast('Jugador creado solo en ' . $player->tenant->name . '. Error API: ' . ($result['error'] ?? 'desconocido'), 'error');
+                }
+            }
+        }
 
         // Activity log
         activity()

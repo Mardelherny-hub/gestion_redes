@@ -46,5 +46,11 @@ Route::middleware(['auth', 'tenant.identify'])->group(function () {
 
         // Configuración de Ruleta (solo admin)
         Route::view('/wheel-config', 'agent.wheel-config')->name('wheel-config');
+
+        // Integración API
+        Route::view('/api-integration', 'agent.api-integration')->name('api-integration');
+
+        // Logs de Integración API
+        Route::view('/api-integration/logs', 'agent.api-integration-logs')->name('api-integration.logs');
     });
 }); 

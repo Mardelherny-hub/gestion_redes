@@ -107,8 +107,21 @@ class ApproveTransaction extends Component
                 ->log('transaction_approved');
         });
 
-        $this->showToast('Transacción aprobada correctamente', 'success');
+        // Feedback API
+        $apiWarning = '';
+        $service = \App\Services\ApiIntegrationService::forTenant($this->transaction->player->tenant);
+        if ($service) {
+            $type = $this->transaction->type;
+            $endpoints = $this->transaction->player->tenant->apiIntegration->endpoints ?? [];
 
+            if ($type === 'password_reset' && empty($endpoints['update_password'])) {
+                $apiWarning = ' ⚠️ Cambiar contraseña manualmente en la plataforma externa';
+            } elseif ($type === 'account_unlock' && empty($endpoints['unlock_user'])) {
+                $apiWarning = ' ⚠️ Desbloquear usuario manualmente en la plataforma externa';
+            }
+        }
+
+        $this->showToast('Transacción aprobada correctamente.' . $apiWarning, $apiWarning ? 'warning' : 'success');
         $this->dispatch('transactionProcessed');
         $this->close();
     }

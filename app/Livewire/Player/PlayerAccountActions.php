@@ -86,10 +86,7 @@ class PlayerAccountActions extends Component
             ->exists();
 
         if ($pending) {
-            $this->dispatch('notify', [
-                'type' => 'warning',
-                'message' => 'Ya tienes una solicitud pendiente. Espera a que sea procesada.'
-            ]);
+            $this->showToast('Ya tienes una solicitud pendiente. Espera a que sea procesada.', 'warning');
             return;
         }
 
@@ -110,11 +107,7 @@ class PlayerAccountActions extends Component
             ->causedBy(auth()->user())
             ->log('Solicitud de desbloqueo de usuario generada');
 
-        $this->dispatch('notify', [
-            'type' => 'success',
-            'message' => 'Solicitud de desbloqueo generada correctamente.',
-            'persistent' => true
-        ]);
+        $this->showToast('Solicitud de desbloqueo generada correctamente.', 'success');
 
         $this->showUnlockModal = false;
     }

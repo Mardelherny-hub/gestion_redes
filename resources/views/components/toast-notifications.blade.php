@@ -12,7 +12,7 @@
      @notify.window="
         add($event.detail.message, $event.detail.type);
         const id = nextId - 1;
-        setTimeout(() => remove(id), 4000);
+        setTimeout(() => remove(id), $event.detail.type === 'warning' ? 8000 : 4000);
      "
      style="position: fixed; top: 1rem; right: 1rem; z-index: 9999; max-width: 24rem; width: 100%;">
     
