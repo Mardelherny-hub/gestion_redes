@@ -47,7 +47,7 @@ class TransactionObserver
                 $transaction->player->tenant,
                 '💰 Nueva transacción pendiente',
                 ucfirst($transaction->type === 'deposit' ? 'Depósito' : 'Retiro') . ' de $' . number_format($transaction->amount, 2) . ' - ' . $transaction->player->name,
-                '/dashboard/transactions/pending'
+                url('/dashboard/transactions/pending')
             );
         }
 
