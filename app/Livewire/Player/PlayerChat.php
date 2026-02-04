@@ -5,11 +5,15 @@ namespace App\Livewire\Player;
 use App\Services\MessageService;
 use Livewire\Component;
 use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
 
 class PlayerChat extends Component
 {
+    use WithFileUploads;
+    
     public $isOpen = false;
     public $newMessage = '';
+    public $messageImage;
     protected $messageService;
 
     public function boot(MessageService $messageService)
@@ -37,21 +41,31 @@ class PlayerChat extends Component
     public function sendMessage()
     {
         $this->validate([
-            'newMessage' => 'required|min:1|max:1000',
+            'newMessage' => 'required_without:messageImage|min:1|max:1000',
+            'messageImage' => 'nullable|image|max:2048',
         ], [
-            'newMessage.required' => 'Escribe un mensaje',
+            'newMessage.required_without' => 'Escribe un mensaje o adjunta una imagen',
             'newMessage.max' => 'El mensaje es muy largo',
+            'messageImage.image' => 'El archivo debe ser una imagen',
+            'messageImage.max' => 'La imagen no debe superar 2MB',
         ]);
 
         $player = auth()->guard('player')->user();
         
+        $imagePath = null;
+        if ($this->messageImage) {
+            $imagePath = $this->messageImage->store('messages/' . $player->tenant_id, 'public');
+        }
+        
         $this->messageService->sendPlayerMessage(
             $player,
-            $this->newMessage,
-            'support'
+            $this->newMessage ?: '📷 Imagen',
+            'support',
+            $imagePath
         );
 
         $this->newMessage = '';
+        $this->messageImage = null;
         
         $this->dispatch('message-sent');
     }

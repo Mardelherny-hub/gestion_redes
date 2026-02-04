@@ -122,26 +122,28 @@ class AgentPlayerMessages extends Component
         $query = Player::whereIn('id', $playerIds);
 
         // Búsqueda
+        // Búsqueda (ILIKE para case-insensitive en PostgreSQL)
         if ($this->search) {
-            $query->where(function($q) {
-                $q->where('name', 'like', '%' . $this->search . '%')
-                  ->orWhere('phone', 'like', '%' . $this->search . '%')
-                  ->orWhere('email', 'like', '%' . $this->search . '%');
+            $searchTerm = '%' . $this->search . '%';
+            $query->where(function($q) use ($searchTerm) {
+                $q->whereRaw('LOWER(username) LIKE LOWER(?)', [$searchTerm])
+                ->orWhere('phone', 'like', $searchTerm)
+                ->orWhere('email', 'ilike', $searchTerm);
             });
         }
 
         return $query->withCount([
-                'messages as unread_count' => function($q) {
-                    $q->where('sender_type', 'player')
-                      ->whereNull('read_by_agent_at');
-                }
-            ])
-            ->with(['messages' => function($q) {
-                $q->latest()->limit(1);
-            }])
-            ->orderByDesc('unread_count')
-            ->orderBy('updated_at', 'desc')
-            ->get();
+            'messages as unread_count' => function($q) {
+                $q->where('sender_type', 'player')
+                ->whereNull('read_by_agent_at');
+            }
+        ])
+        ->with(['messages' => function($q) {
+            $q->latest()->limit(1);
+        }])
+        ->withMax('messages', 'created_at')
+        ->orderByDesc('messages_max_created_at')
+        ->get();
     }
 
     public function getSelectedPlayerMessages()
