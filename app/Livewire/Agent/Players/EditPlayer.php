@@ -121,12 +121,14 @@ class EditPlayer extends Component
         // API: cambio de contraseña
         if (!empty($this->password)) {
             $service = \App\Services\ApiIntegrationService::forTenant($this->player->tenant);
-            $result = $service->updatePassword($this->player, $this->password);
+            if ($service) {
+                $result = $service->updatePassword($this->player, $this->password);
                 if ($result['success']) {
                     $this->showToast('Contraseña replicada en plataforma externa ✅', 'success');
                 } else {
                     $this->showToast('Contraseña actualizada solo en ' . $this->player->tenant->name . ' (' . ($result['error'] ?? 'API no soporta esta acción') . ')', 'info');
                 }
+            }
         }
 
         // Activity log
