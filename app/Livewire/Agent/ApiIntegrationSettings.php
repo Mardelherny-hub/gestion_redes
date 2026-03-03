@@ -38,6 +38,10 @@ class ApiIntegrationSettings extends Component
     public string $extra_source_id = '';
     public string $extra_token = '';
 
+    public string $extra_login_url = '';
+    public string $extra_login_username = '';
+    public string $extra_login_password = '';
+
     public function mount()
     {
         if (!auth()->user()->tenant?->hasAddon('api_integration')) {
@@ -70,6 +74,10 @@ class ApiIntegrationSettings extends Component
             $this->extra_parent_id = $extraConfig['parent_id'] ?? '';
             $this->extra_source_id = $extraConfig['source_id'] ?? '';
             $this->extra_token = $extraConfig['token'] ?? '';
+
+            $this->extra_login_url = $extraConfig['login_url'] ?? '';
+            $this->extra_login_username = $extraConfig['login_username'] ?? '';
+            $this->extra_login_password = $extraConfig['login_password'] ?? '';
         }
     }
 
@@ -77,7 +85,7 @@ class ApiIntegrationSettings extends Component
     {
         return [
             'base_url' => ['required_if:enabled,true', 'nullable', 'url'],
-            'auth_type' => ['required', 'in:api_key,bearer,basic,token_body'],
+            'auth_type' => ['required', 'in:api_key,bearer,basic,token_body,cookie_session'],
             'auth_credentials' => ['required_if:enabled,true', 'nullable', 'string'],
         ];
     }
@@ -125,6 +133,9 @@ class ApiIntegrationSettings extends Component
                     'parent_id' => $this->extra_parent_id,
                     'source_id' => $this->extra_source_id,
                     'token' => $this->extra_token,
+                    'login_url' => $this->extra_login_url,
+                    'login_username' => $this->extra_login_username,
+                    'login_password' => $this->extra_login_password,
                 ],
             ]
         );

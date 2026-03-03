@@ -45,6 +45,7 @@
                     <option value="api_key">API Key</option>
                     <option value="bearer">Bearer Token</option>
                     <option value="basic">Basic Auth</option>
+                    <option value="cookie_session">Cookie Session (Login automático)</option>
                 </select>
             </div>
 
@@ -61,6 +62,28 @@
                     class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                 @error('auth_credentials') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
             </div>
+
+            {{-- Login automático (solo cookie_session) --}}
+            @if($auth_type === 'cookie_session')
+            <div class="p-4 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 space-y-4">
+                <p class="text-sm font-medium text-yellow-800 dark:text-yellow-200">⚠️ Configuración de Login Automático</p>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">URL de Login</label>
+                    <input type="url" wire:model="extra_login_url" placeholder="https://agents.ganamosnet.org/login"
+                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Usuario de Login</label>
+                    <input type="text" wire:model="extra_login_username" placeholder="usuario"
+                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Contraseña de Login</label>
+                    <input type="password" wire:model="extra_login_password" placeholder="contraseña"
+                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+            </div>
+            @endif
 
             {{-- Botón Test Conexión --}}
             <div>

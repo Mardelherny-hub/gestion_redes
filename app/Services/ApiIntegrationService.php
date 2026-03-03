@@ -7,11 +7,13 @@ use App\Models\ApiIntegrationLog;
 use App\Models\Player;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class ApiIntegrationService
 {
     protected AgentApiIntegration $config;
+    protected ?Player $currentPlayer = null;
 
     public function __construct(AgentApiIntegration $config)
     {
@@ -47,6 +49,8 @@ class ApiIntegrationService
             $data['parent_id'] = $extra['parent_id'];
         }
 
+        $this->currentPlayer = $player;
+
         $result = $this->sendRequest('create_user', $data, 'POST');
 
         // Guardar external_id si la respuesta lo trae
@@ -74,6 +78,8 @@ class ApiIntegrationService
             $mappings['password'] ?? 'password' => $password,
         ];
 
+        $this->currentPlayer = $player;
+
         return $this->sendRequest('update_password', $data, 'POST');
     }
 
@@ -87,6 +93,8 @@ class ApiIntegrationService
         $data = [
             $mappings['username'] ?? 'username' => $player->username,
         ];
+
+        $this->currentPlayer = $player;
 
         return $this->sendRequest('unlock_user', $data, 'POST');
     }
@@ -113,6 +121,8 @@ class ApiIntegrationService
             $data['destination_id'] = $player->external_id;
         }
 
+        $this->currentPlayer = $player;
+
         return $this->sendRequest('deposit', $data, 'POST');
     }
 
@@ -137,6 +147,8 @@ class ApiIntegrationService
             $data['destination_id'] = $player->external_id;
         }
 
+        $this->currentPlayer = $player;
+
         return $this->sendRequest('withdraw', $data, 'POST');
     }
 
@@ -154,6 +166,12 @@ class ApiIntegrationService
         }
 
         $url = rtrim($this->config->base_url, '/') . '/' . ltrim($endpoint, '/');
+
+        // Reemplazar placeholders dinámicos en la URL
+        if ($this->currentPlayer) {
+            $url = str_replace('{external_id}', $this->currentPlayer->external_id ?? '', $url);
+            $url = str_replace('{username}', $this->currentPlayer->username ?? '', $url);
+        }
 
         // Si auth es token_body, inyectar el token en los datos
         if ($this->config->auth_type === 'token_body') {
@@ -197,7 +215,20 @@ class ApiIntegrationService
     {
         $credentials = $this->config->auth_credentials;
 
-        if (!$credentials || $this->config->auth_type === 'token_body') {
+        if ($this->config->auth_type === 'token_body') {
+            return $request;
+        }
+
+        if ($this->config->auth_type === 'cookie_session') {
+            $sessionToken = $this->getSessionToken();
+            if ($sessionToken) {
+                $domain = parse_url($this->config->base_url, PHP_URL_HOST);
+                return $request->withCookies(['session' => $sessionToken], $domain);
+            }
+            return $request;
+        }
+
+        if (!$credentials) {
             return $request;
         }
 
@@ -207,6 +238,59 @@ class ApiIntegrationService
             'api_key' => $request->withHeaders(['X-API-Key' => $credentials]),
             default => $request,
         };
+    }
+
+    /**
+     * Obtener token de sesión via login automático (cookie_session)
+     */
+    protected function getSessionToken(): ?string
+    {
+        $extra = $this->config->extra_config ?? [];
+        $loginUrl = $extra['login_url'] ?? null;
+        $username = $extra['login_username'] ?? null;
+        $password = $extra['login_password'] ?? null;
+
+        if (!$loginUrl || !$username || !$password) {
+            Log::error('Cookie session: faltan credenciales de login', [
+                'tenant_id' => $this->config->tenant_id,
+            ]);
+            return null;
+        }
+
+        // Cache del token por tenant (24 horas)
+        $cacheKey = "api_session_token_{$this->config->tenant_id}";
+
+        return Cache::remember($cacheKey, now()->addHours(24), function () use ($loginUrl, $username, $password) {
+            try {
+                $response = Http::timeout(15)->post($loginUrl, [
+                    'username' => $username,
+                    'password' => $password,
+                ]);
+
+                if ($response->successful()) {
+                    $cookies = $response->cookies();
+                    $sessionCookie = $cookies->getCookieByName('session');
+
+                    if ($sessionCookie) {
+                        return $sessionCookie->getValue();
+                    }
+                }
+
+                Log::error('Cookie session: login fallido', [
+                    'tenant_id' => $this->config->tenant_id,
+                    'http_status' => $response->status(),
+                    'response' => $response->json(),
+                ]);
+
+                return null;
+            } catch (\Exception $e) {
+                Log::error('Cookie session: error en login', [
+                    'tenant_id' => $this->config->tenant_id,
+                    'error' => $e->getMessage(),
+                ]);
+                return null;
+            }
+        });
     }
 
     /**
