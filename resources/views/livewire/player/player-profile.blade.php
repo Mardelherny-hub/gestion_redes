@@ -102,12 +102,12 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contraseña Actual</label>
                             <x-password-input 
-                                id="password"
-                                name="password"
-                                model="password"
+                                id="current_password"
+                                name="current_password"
+                                model="current_password"
                                 placeholder="••••••••"
                                 required
-                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
+                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('current_password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
                             />
                             @error('current_password')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -118,12 +118,12 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nueva Contraseña</label>
                             <x-password-input 
-                                id="password"
-                                name="password"
-                                model="password"
+                                id="new_password"
+                                name="new_password"
+                                model="new_password"
                                 placeholder="••••••••"
                                 required
-                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
+                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('new_password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
                             />
                             @error('new_password')
                             <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
@@ -134,12 +134,12 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmar Nueva Contraseña</label>
                             <x-password-input 
-                                id="password"
-                                name="password"
-                                model="password"
+                                id="new_password_confirmation"
+                                name="new_password_confirmation"
+                                model="new_password_confirmation"
                                 placeholder="••••••••"
                                 required
-                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('password') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
+                                class="bg-white/5 border text-white placeholder-gray-500 focus:outline-none focus:bg-white/10 transition {{ $errors->has('new_password_confirmation') ? 'border-red-500' : 'border-white/10 focus:border-white/30' }}"
                             />
                         </div>
 
@@ -207,3 +207,5 @@
     </div>
     </div>
 </div>
+
+[executed on device: victor-red-byte (f91d292a-fd9e-4036-82bf-f3107a17c25f)]

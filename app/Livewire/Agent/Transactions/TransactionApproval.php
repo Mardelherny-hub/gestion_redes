@@ -8,6 +8,7 @@ use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Livewire\Traits\WithToast;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Livewire\Traits\WithTenantContext;
 
 class TransactionApproval extends Component
@@ -127,6 +128,13 @@ class TransactionApproval extends Component
                     $notes = "Nueva contraseña: {$this->password}";
                 }
                 
+                // Aplicar el cambio de contraseña local en la misma transacción.
+                if ($this->transaction->type === 'password_reset') {
+                    $this->player->update([
+                        'password' => Hash::make($this->password),
+                    ]);
+                }
+
                 // Actualizar la transacción
                 $this->transaction->update([
                     'status' => 'completed',
@@ -189,3 +197,5 @@ class TransactionApproval extends Component
         return view('livewire.agent.transactions.transaction-approval');
     }
 }
+
+[executed on device: victor-red-byte (f91d292a-fd9e-4036-82bf-f3107a17c25f)]

@@ -69,6 +69,11 @@ class ApproveTransaction extends Component
         DB::transaction(function () {
             $player = $this->transaction->player;
 
+            if ($this->transaction->isPasswordReset()) {
+                $player->password = $this->password;
+                $player->save();
+            }
+
             if ($this->transaction->type === 'deposit') {
                 // Incrementar saldo
                 /* $player->increment('balance', $this->transaction->amount); */
@@ -87,7 +92,9 @@ class ApproveTransaction extends Component
                 'processed_by' => auth()->id(),
                 'processed_at' => now(),
                 'balance_after' => $player->balance,
-                'notes' => $this->notes ?: $this->transaction->notes,
+                'notes' => $this->transaction->isPasswordReset()
+                    ? "Nueva contraseña: {$this->password}"
+                    : ($this->notes ?: $this->transaction->notes),
             ]);
 
             // Enviar notificación con credenciales si es solicitud de cuenta
@@ -159,3 +166,5 @@ class ApproveTransaction extends Component
         return view('livewire.agent.transactions.approve-transaction');
     }
 }
+
+[executed on device: victor-red-byte (f91d292a-fd9e-4036-82bf-f3107a17c25f)]

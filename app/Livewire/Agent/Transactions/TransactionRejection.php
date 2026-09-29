@@ -3,7 +3,7 @@
 namespace App\Livewire\Agent\Transactions;
 
 use App\Models\Transaction;
-use App\Services\TransactionService;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use App\Livewire\Traits\WithToast;
@@ -33,7 +33,7 @@ class TransactionRejection extends Component
     ];
 
     protected $rules = [
-        'rejectionReason' => 'nullable|min:10|max:500',
+        'rejectionReason' => 'required|string|min:10|max:500',
     ];
 
     protected $messages = [
@@ -88,7 +88,7 @@ class TransactionRejection extends Component
                     'status' => 'rejected',
                     'processed_by' => $user->id,
                     'processed_at' => now(),
-                    'notes' => $this->reason,
+                    'notes' => $this->rejectionReason,
                 ]);
 
                 // Notificar al jugador sobre el rechazo
@@ -100,7 +100,7 @@ class TransactionRejection extends Component
                     ->performedOn($this->transaction)
                     ->causedBy($user)
                     ->withProperties([
-                        'reason' => $this->reason,
+                        'reason' => $this->rejectionReason,
                         'type' => $this->transaction->type
                     ])
                     ->log('Solicitud rechazada: ' . $this->getTypeLabel());
@@ -114,9 +114,9 @@ class TransactionRejection extends Component
             
             $this->dispatch('transactionProcessed');
             $this->showModal = false;
-            $this->reset(['transaction', 'reason']);
+            $this->reset(['transaction', 'player', 'rejectionReason']);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $this->dispatch('notify', [
                 'type' => 'error',
                 'message' => 'Error: ' . $e->getMessage(),
@@ -171,3 +171,5 @@ class TransactionRejection extends Component
         return view('livewire.agent.transactions.transaction-rejection');
     }
 }
+
+[executed on device: victor-red-byte (f91d292a-fd9e-4036-82bf-f3107a17c25f)]
