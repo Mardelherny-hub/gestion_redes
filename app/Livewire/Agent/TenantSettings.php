@@ -78,8 +78,18 @@ class TenantSettings extends Component
     public function rules(): array
     {
         return [
-            'whatsapp_number' => ['required','string','regex:/^\+\d{7,15}$/'],
+            'whatsapp_number' => ['required','string','regex:/^\d{7,15}$/'],
             'casino_url'      => ['required','url'],
+        ];
+    }
+
+    protected function messages(): array
+    {
+        return [
+            'whatsapp_number.required' => 'Ingresá un número de WhatsApp.',
+            'whatsapp_number.regex' => 'Ingresá el número en formato internacional, por ejemplo: +54 9 11 5404-9260.',
+            'casino_url.required' => 'Ingresá la URL del casino.',
+            'casino_url.url' => 'La URL del casino debe ser válida e incluir http:// o https://.',
         ];
     }
 
@@ -120,6 +130,10 @@ class TenantSettings extends Component
     /** ========= Guardar: Generales ========= */
     public function save()
     {
+        // WhatsApp/wa.me usa el numero internacional sin signos.
+        // Aceptamos una entrada amigable y persistimos solo digitos.
+        $this->whatsapp_number = preg_replace('/[\s()+.\-]+/', '', trim($this->whatsapp_number));
+
         $this->validate();
 
         $tenant = auth()->user()->tenant;

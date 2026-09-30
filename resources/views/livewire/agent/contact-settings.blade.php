@@ -88,8 +88,8 @@
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
                                 <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                    💡 Formato: código país + código área + número (sin espacios ni guiones)
-                                    <br>Ejemplo Argentina: 549 + 223 + 4567890 = <strong>5492234567890</strong>
+                                    💡 Formato internacional. Podés escribirlo con o sin “+”, espacios o guiones.
+                                    <br>Ejemplo Argentina: <strong>+54 9 11 5404-9260</strong>
                                 </p>
                             </div>
                         </div>

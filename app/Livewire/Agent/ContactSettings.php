@@ -43,11 +43,15 @@ class ContactSettings extends Component
 
     public function save()
     {
+        // Persistir WhatsApp en el formato que requiere wa.me: solo dígitos.
+        // Se toleran signos habituales de presentación al ingresarlo.
+        $this->whatsapp_number = preg_replace('/[\s()+.\-]+/', '', trim($this->whatsapp_number));
+
         $this->validate([
-            'whatsapp_number' => 'nullable|string|max:20',
+            'whatsapp_number' => ['nullable', 'string', 'regex:/^\d{7,15}$/'],
             'casino_url' => 'nullable|url|max:255',
         ], [
-            'whatsapp_number.max' => 'El número de WhatsApp no puede exceder 20 caracteres',
+            'whatsapp_number.regex' => 'Ingresá el número en formato internacional, por ejemplo: +54 9 11 5404-9260.',
             'casino_url.url' => 'La URL del casino debe ser válida',
             'casino_url.max' => 'La URL no puede exceder 255 caracteres',
         ]);

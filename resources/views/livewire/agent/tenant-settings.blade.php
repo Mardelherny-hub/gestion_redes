@@ -22,7 +22,7 @@
             <input type="text" id="whatsapp_number" wire:model.defer="whatsapp_number"
                    placeholder="+5492231234567"
                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            <p class="mt-1 text-xs text-gray-500">Formato internacional con “+”. Ej: +5492231234567</p>
+            <p class="mt-1 text-xs text-gray-500">Formato internacional. Podés escribirlo con o sin “+”, espacios o guiones. Ej: +54 9 11 5404-9260</p>
             @error('whatsapp_number') <p class="mt-2 text-sm text-red-600">{{ $message }}</p> @enderror
         </div>
 
