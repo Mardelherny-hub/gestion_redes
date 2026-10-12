@@ -4,6 +4,7 @@ namespace App\Livewire\Player;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Player;
 
 class PlayerProfile extends Component
 {
