@@ -43,7 +43,6 @@ yarn-error.log
 
 # PHP
 composer.phar
-composer.lock
 
 # Node
 node_modules/
